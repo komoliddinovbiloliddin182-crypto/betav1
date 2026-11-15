@@ -33,6 +33,10 @@ class ApiError extends Error { constructor(status, code) { super(code); this.sta
 const has = (o, k) => Object.prototype.hasOwnProperty.call(o, k);
 const arr = (x) => (Array.isArray(x) ? x : []);
 const isObj = (x) => x && typeof x === 'object' && !Array.isArray(x);
+const uidSrv = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+const BOT_STATUSES = ['off', 'starting', 'restarting', 'active', 'stopped', 'expired'];
+// statuses a customer may set on its OWN bots (admin grants 'active' / 'stopped')
+const CUST_BOT_STATUSES = ['off', 'starting', 'restarting'];
 
 function stable(v) {
   if (v === null || typeof v !== 'object') return JSON.stringify(v);
@@ -235,7 +239,46 @@ function mergeUser(srv, inc, role, doc) {
   srv.readNotifs = Array.from(new Set(arr(srv.readNotifs).concat(arr(inc.readNotifs).filter((x) => typeof x === 'string')))).slice(-300);
 
   if (role === 'customer') {
-    srv.bots = arr(inc.bots).filter(isObj).slice(0, 50);
+    // 1 TARIFF = 1 BOT (server-side enforcement):
+    // A customer CANNOT add new bots through /api/sync. Bots are created only via
+    // /api/create-bot, which charges the balance for one tariff. Here we only allow
+    // updating mutable fields of bots that already exist (matched by id).
+    const incoming = arr(inc.bots).filter(isObj);
+    const byIdIn = new Map(incoming.map((b) => [b.id, b]));
+    const orig = arr(srv.bots);
+    const kept = [];
+    const seenIds = new Set();
+    for (const sb of orig) {
+      const id = String(sb.id || '');
+      const inc2 = id && byIdIn.get(id);
+      if (!inc2) { kept.push(sb); continue; }        // not in incoming -> keep as-is
+      seenIds.add(id);
+      // mutable, customer-controlled fields only
+      if (typeof inc2.name === 'string' && inc2.name.trim().length >= 2) sb.name = inc2.name.trim().slice(0, 80);
+      if (inc2.mainFile === null || (typeof inc2.mainFile === 'string' && inc2.mainFile.length <= 200)) sb.mainFile = inc2.mainFile;
+      if (Array.isArray(inc2.files)) {
+        sb.files = inc2.files
+          .filter((f) => isObj(f) && typeof f.name === 'string' && f.name.length <= 200)
+          .slice(0, 50)
+          .map((f) => ({ name: String(f.name).slice(0, 200), size: Number(f.size) || 0 }));
+      }
+      if (Array.isArray(inc2.logs)) {
+        // union server + incoming logs by (time,msg,kind) so server-added logs are never lost
+        const merged = []; const seen = new Set();
+        for (const l of arr(sb.logs).concat(inc2.logs.filter(isObj))) {
+          const k = (Number(l.time) || 0) + '|' + String(l.msg || '').slice(0, 200) + '|' + String(l.kind || '');
+          if (seen.has(k)) continue; seen.add(k); merged.push(l);
+        }
+        merged.sort((a, b) => (a.time || 0) - (b.time || 0));
+        sb.logs = merged.slice(-120);
+      }
+      // customer may only request transitional statuses; 'active'/'stopped' are admin-granted
+      if (typeof inc2.status === 'string' && CUST_BOT_STATUSES.includes(inc2.status)) sb.status = inc2.status;
+      // tariffId / tariffName / price / days / expiresAt / createdAt are IMMUTABLE by customer
+      kept.push(sb);
+    }
+    // any incoming bot id that does not match an existing server bot is DROPPED (no free bots)
+    srv.bots = kept.slice(0, 50);
   } else if (role === 'admin') {
     // manual balance adjustment made by admin (delta, not absolute)
     const d = Math.trunc(Number(inc._dBal));
@@ -243,7 +286,37 @@ function mergeUser(srv, inc, role, doc) {
       srv.balance = Math.max(0, (srv.balance || 0) + d);
       doc.shared.earned = Math.max(0, (doc.shared.earned || 0) + d);
     }
+    // admin may set bot status (approve -> 'active', stop -> 'stopped', etc.) and delete bots
+    if (Array.isArray(inc.bots)) {
+      const incoming = inc.bots.filter(isObj);
+      const inIds = new Set(incoming.map((b) => String(b.id || '')).filter(Boolean));
+      // if admin sends a bots array, treat it as the desired set: keep matched, drop the rest (delete)
+      // but only when the admin explicitly sent a bots list (length may be smaller than server's)
+      const wantDelete = incoming.some((b) => b._deleted === true);
+      srv.bots = arr(srv.bots).filter((sb) => {
+        const id = String(sb.id || '');
+        if (wantDelete && incoming.find((b) => String(b.id || '') === id && b._deleted)) return false;
+        return true;
+      });
+      // apply status updates from admin onto surviving bots
+      arr(srv.bots).forEach((sb) => {
+        const id = String(sb.id || '');
+        const inc2 = incoming.find((b) => String(b.id || '') === id);
+        if (inc2 && typeof inc2.status === 'string' && BOT_STATUSES.includes(inc2.status)) {
+          sb.status = inc2.status;
+          // extend expiry when admin re-activates a bot that had expired
+          if (inc2.status === 'active' && isExpiredBot(sb)) {
+            sb.expiresAt = Date.now() + (Number(sb.days) || 30) * 86400000;
+          }
+        }
+      });
+    }
   }
+}
+
+function isExpiredBot(b) {
+  if (!b || !b.expiresAt) return false;
+  return Number(b.expiresAt) < Date.now();
 }
 
 function applyAdminShared(doc, s) {
@@ -257,7 +330,24 @@ function applyAdminShared(doc, s) {
     });
     sh.promos = p;
   }
-  if (Array.isArray(s.tariffs)) sh.tariffs = s.tariffs.filter(isObj).slice(0, 100);
+  if (Array.isArray(s.tariffs)) {
+    // validate & normalize every tariff admin pushes; only well-formed tariffs reach customers
+    sh.tariffs = s.tariffs.filter(isObj).map((tf) => {
+      const price = Math.floor(Number(tf.price));
+      const days = Math.floor(Number(tf.days)) || 30;
+      const cpu = Math.floor(Number(tf.cpu)) || 1;
+      const mem = Math.floor(Number(tf.mem)) || 256;
+      const storage = Math.floor(Number(tf.storage)) || 256;
+      const name = String(tf.name || '').slice(0, 60);
+      if (!name || price < 1 || price > 1e9) return null;
+      return {
+        id: String(tf.id || uidSrv()).slice(0, 40),
+        name, price, days, cpu, mem, storage,
+        active: tf.active === false ? false : true,
+        createdAt: Number(tf.createdAt) || Date.now()
+      };
+    }).filter(Boolean).slice(0, 100);
+  }
   if (Array.isArray(s.notifs)) {
     const old = new Set(sh.notifs.map((n) => n.id));
     const fresh = s.notifs.filter((n) => isObj(n) && n.id && !old.has(n.id)).map((n) => n.id);
@@ -410,6 +500,71 @@ app.post('/api/promo', limiter(60), wrap(async (req, res) => {
     u.activity.unshift({ key: 'act_promo', params: { amount: Number(bonus).toLocaleString('ru-RU') }, time: now });
     touch(doc);
     return reply(doc, nick, { bonus });
+  });
+  res.json(out);
+}));
+
+// 1 TARIFF = 1 BOT — server-side bot creation with payment.
+// A customer picks an active tariff; the server charges the balance and creates
+// exactly ONE bot bound to that tariff. New bots can NEVER be added via /api/sync.
+app.post('/api/create-bot', limiter(30), wrap(async (req, res) => {
+  const nick = tokenNick(req, true);
+  const name = String((req.body || {}).name || '').trim();
+  const tariffId = String((req.body || {}).tariffId || '');
+  if (name.length < 2 || name.length > 80) throw new ApiError(400, 'badbotname');
+  const out = await store.tx(async (doc) => {
+    const u = needUser(doc, nick);
+    if (u.isAdmin) throw new ApiError(400, 'invalid');
+    const tf = (doc.shared.tariffs || []).find((x) => String(x.id) === tariffId && x.active !== false);
+    if (!tf) throw new ApiError(400, 'badtariff');
+    if ((arr(u.bots)).length >= 50) throw new ApiError(400, 'toomanybots');
+    if ((u.balance || 0) < tf.price) throw new ApiError(400, 'insufficient');
+    // charge the customer for this one tariff
+    u.balance = (u.balance || 0) - tf.price;
+    doc.shared.earned = (doc.shared.earned || 0) + tf.price;
+    const now = Date.now();
+    const days = Number(tf.days) || 30;
+    const bot = {
+      id: uidSrv(),
+      name,
+      status: 'off',
+      mainFile: null,
+      files: [],
+      logs: [{ time: now, msg: 'Bot created. Tariff: ' + tf.name + ' · ' + tf.price.toLocaleString('ru-RU') + " so'm · " + days + ' days. 1 tariff = 1 bot.', kind: 'sys' }],
+      createdAt: now,
+      tariffId: tf.id,
+      tariffName: tf.name,
+      price: tf.price,
+      days,
+      expiresAt: now + days * 86400000
+    };
+    arr(u.bots).push(bot);
+    u.transactions = arr(u.transactions);
+    u.transactions.unshift({ type: 'out', amount: tf.price, descKey: 'tx_bot_create', params: { name, tariff: tf.name }, time: now });
+    u.activity = arr(u.activity);
+    u.activity.unshift({ key: 'act_bot_create', params: { name }, time: now });
+    touch(doc);
+    return reply(doc, nick, { botId: bot.id });
+  });
+  res.json(out);
+}));
+
+// A customer may delete its OWN bot by id (dedicated endpoint, not sync).
+app.post('/api/delete-bot', limiter(30), wrap(async (req, res) => {
+  const nick = tokenNick(req, true);
+  const botId = String((req.body || {}).id || '');
+  const out = await store.tx(async (doc) => {
+    const u = needUser(doc, nick);
+    if (u.isAdmin) throw new ApiError(400, 'invalid');
+    const before = arr(u.bots).length;
+    u.bots = arr(u.bots).filter((b) => String(b.id) !== botId);
+    if (u.bots.length === before) throw new ApiError(404, 'notfound');
+    // also drop file uploads belonging to that bot
+    doc.shared.fileUploads = arr(doc.shared.fileUploads).filter((f) => f.botId !== botId);
+    u.activity = arr(u.activity);
+    u.activity.unshift({ key: 'act_bot_stop', params: { name: botId }, time: Date.now() });
+    touch(doc);
+    return reply(doc, nick);
   });
   res.json(out);
 }));
