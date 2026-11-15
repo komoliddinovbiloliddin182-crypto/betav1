@@ -813,9 +813,10 @@
       .drawer-close { display: none; }
       .drawer-bd { display: none !important; }
       .drawer {
-        top: 64px; transform: none; box-shadow: none;
+        top: 64px; transform: translateX(-100%); box-shadow: none;
         width: 248px; transition: none;
       }
+      body.in-app .drawer,
       .drawer.open { transform: none; }
       .app-body { max-width: 1120px; margin-left: 248px; padding: 30px 34px 70px; }
       .app-nav { padding-left: 30px; padding-right: 30px; }
@@ -2347,6 +2348,7 @@ function resetLocal(){
   ensureAdmin();
   dirty = false; rev = 0; snapUsers = {}; snapShared = {}; snapFiles = {}; knownReq = {};
   saveLocal();
+  document.body.classList.remove('in-app');
   document.getElementById('app').style.display = 'none';
   document.getElementById('app').classList.remove('admin-mode');
   document.getElementById('landing').style.display = 'block';
@@ -2365,6 +2367,7 @@ async function loadPublic(){
 
 function enterApp(){
   const u = user();
+  document.body.classList.add('in-app');
   document.getElementById('landing').style.display = 'none';
   const appEl = document.getElementById('app');
   appEl.style.display = 'block';
@@ -3032,6 +3035,18 @@ async function doPromo(){
 /* ============================================================
    TARIFFS  (admin creates → customers & landing see them)
    ============================================================ */
+// A logged-in customer clicking a tariff "Choose" button must go straight into
+// the new-bot flow with that tariff pre-selected — NOT back to the register modal.
+// Visitors (not logged in) are still sent to register, as before.
+function chooseTariff(id){
+  const u = user();
+  if (state.token && u && !u.isAdmin){
+    openModal('newbot');        // renders the tariff picker (renderNewbotTariffs)
+    selectNewbotTariff(id);     // pre-select the clicked tariff
+  } else {
+    openModal('register');
+  }
+}
 function tariffCardHtml(tf, idx){
   const popular = idx === 0 ? ' popular' : '';
   const tagAttr = idx === 0 ? ' data-tag="'+t('plan_popular')+'"' : '';
@@ -3047,7 +3062,7 @@ function tariffCardHtml(tf, idx){
       '<li>💾 '+t('p_tariffs_storage')+': '+fmtMoney(storage)+' MB</li>'+
       '<li>🎟 '+t('mb_1t1b')+'</li>'+
     '</ul>'+
-    '<button class="btn '+(idx===0?'btn-primary':'btn-outline')+' btn-block" data-i18n="p_tariffs_choose" onclick="openModal(\'register\')"></button>'+
+    '<button class="btn '+(idx===0?'btn-primary':'btn-outline')+' btn-block" data-i18n="p_tariffs_choose" onclick="chooseTariff(\''+esc(tf.id)+'\')"></button>'+
   '</div>';
 }
 function renderLandingTariffs(){
