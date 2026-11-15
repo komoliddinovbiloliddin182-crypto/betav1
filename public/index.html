@@ -568,6 +568,53 @@
     .empty { text-align: center; padding: 44px 20px; color: var(--muted); }
     .empty .ic { font-size: 2.6rem; margin-bottom: 12px; opacity: .5; }
 
+    /* ===== Alert (inline banner) ===== */
+    .alert { padding: 12px 14px; border-radius: 11px; font-size: .86rem; margin-bottom: 14px; display: flex; gap: 9px; align-items: flex-start; border: 1px solid; line-height: 1.5; }
+    .alert > span:first-child { flex-shrink: 0; font-size: 1rem; line-height: 1.4; }
+    .alert-info { background: rgba(59,130,246,.1); color: #93c5fd; border-color: rgba(59,130,246,.3); }
+    .alert-warn { background: rgba(245,158,11,.1); color: var(--warning); border-color: rgba(245,158,11,.3); }
+    .alert-ok { background: rgba(34,197,94,.1); color: var(--success2); border-color: rgba(34,197,94,.3); }
+
+    /* ===== Tariff pick (newbot modal / customer tariffs) ===== */
+    .tariff-pick { padding: 13px 15px; border: 2px solid var(--border2); border-radius: 11px; margin-bottom: 9px; cursor: pointer; transition: all .15s; display: flex; justify-content: space-between; align-items: center; gap: 12px; background: var(--bg2); }
+    .tariff-pick:hover { border-color: var(--primary); background: rgba(59,130,246,.06); }
+    .tariff-pick.selected { border-color: var(--primary); background: rgba(59,130,246,.14); box-shadow: 0 0 0 1px var(--primary) inset; }
+    .tariff-pick .tp-name { font-weight: 700; font-size: .95rem; }
+    .tariff-pick .tp-meta { color: var(--muted); font-size: .76rem; margin-top: 2px; }
+    .tariff-pick .tp-price { color: var(--success2); font-weight: 800; font-size: 1.05rem; white-space: nowrap; }
+    .tariff-pick.disabled { opacity: .55; cursor: not-allowed; }
+    .tariff-pick.disabled:hover { border-color: var(--border2); background: var(--bg2); }
+
+    /* ===== Summary box ===== */
+    .summary-box { background: var(--bg2); border: 1px solid var(--border); border-radius: 11px; padding: 14px 16px; font-size: .9rem; margin-bottom: 14px; }
+    .summary-box .srow { display: flex; justify-content: space-between; padding: 5px 0; gap: 12px; }
+    .summary-box .srow.total { border-top: 1px solid var(--border); margin-top: 6px; padding-top: 11px; font-weight: 700; font-size: 1rem; }
+
+    /* ===== Customer list (admin) ===== */
+    .cust-toolbar { display: flex; justify-content: space-between; align-items: center; gap: 14px; margin-bottom: 12px; flex-wrap: wrap; }
+    .search-box { position: relative; flex: 1; max-width: 340px; }
+    .search-box input { padding-left: 38px; }
+    .search-box .si { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); color: var(--muted2); font-size: .95rem; }
+    .filter-chips { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+    .chip { padding: 6px 14px; border-radius: 999px; border: 1px solid var(--border2); background: var(--card); cursor: pointer; font-size: .78rem; font-weight: 600; color: var(--muted); transition: all .15s; user-select: none; }
+    .chip:hover { border-color: var(--primary); color: var(--primary2); }
+    .chip.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+    .cust-count { color: var(--muted); font-size: .82rem; }
+    .mini-avatar { width: 30px; height: 30px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--accent)); display: inline-flex; align-items: center; justify-content: center; font-weight: 700; font-size: .78rem; color: #fff; flex-shrink: 0; }
+    tr.clickable { cursor: pointer; }
+    tr.clickable:hover td { background: rgba(59,130,246,.06); }
+    .row-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+    .info-row { display: flex; justify-content: space-between; padding: 9px 0; border-bottom: 1px solid var(--border); font-size: .88rem; gap: 12px; }
+    .info-row:last-child { border-bottom: none; }
+    .info-row .k { color: var(--muted); }
+    .info-row .v { font-weight: 600; text-align: right; word-break: break-all; }
+
+    /* ===== Toast ===== */
+    #cc-toast { position: fixed; bottom: 22px; right: 22px; z-index: 9999; background: var(--card2); color: var(--text); padding: 13px 20px; border-radius: 12px; border: 1px solid var(--border2); box-shadow: 0 8px 24px rgba(0,0,0,.4); font-size: .88rem; font-weight: 500; max-width: 360px; opacity: 0; transform: translateY(10px); transition: all .25s; pointer-events: none; }
+    #cc-toast.show { opacity: 1; transform: translateY(0); }
+    #cc-toast.ok { border-color: rgba(34,197,94,.5); }
+    #cc-toast.err { border-color: rgba(239,68,68,.5); }
+
     /* ===== Settings ===== */
     .setting-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
     .setting-row:last-child { border-bottom: none; }
@@ -759,6 +806,23 @@
       .bot-detail-head { padding: 14px 16px; }
       .console-controls { gap: 8px; }
     }
+
+    /* ===== Desktop: drawer becomes a persistent sidebar ===== */
+    @media (min-width: 992px) {
+      .hamburger { display: none; }
+      .drawer-close { display: none; }
+      .drawer-bd { display: none !important; }
+      .drawer {
+        top: 64px; transform: none; box-shadow: none;
+        width: 248px; transition: none;
+      }
+      .drawer.open { transform: none; }
+      .app-body { max-width: 1120px; margin-left: 248px; padding: 30px 34px 70px; }
+      .app-nav { padding-left: 30px; padding-right: 30px; }
+    }
+    @media (min-width: 1200px) {
+      .app-body { margin-left: 248px; }
+    }
   </style>
 </head>
 <body>
@@ -871,16 +935,25 @@
   </div>
 </div>
 
-<!-- ============ NEW BOT MODAL ============ -->
+<!-- ============ NEW BOT MODAL (1 tariff = 1 bot) ============ -->
 <div class="modal-overlay" id="modal-newbot">
   <div class="modal">
     <button class="modal-close" onclick="closeModals()">×</button>
     <h2 data-i18n="mb_t"></h2>
     <p class="sub" data-i18n="mb_s"></p>
+    <div class="alert alert-warn" style="margin:0 0 14px"><span>⚠️</span><div><b data-i18n="mb_1t1b"></b> — <span data-i18n="mb_1t1b_note"></span></div></div>
+    <!-- tariff picker (rendered by renderNewbotTariffs) -->
     <div class="form-group">
+      <label data-i18n="mb_tariff"></label>
+      <div id="newbot-tariffs"></div>
+    </div>
+    <!-- bot name -->
+    <div class="form-group" id="newbot-name-wrap">
       <label data-i18n="mb_name"></label>
       <input class="form-control" id="newbot-name" data-i18n-ph="mb_name_ph" maxlength="40">
     </div>
+    <!-- live summary -->
+    <div id="newbot-summary"></div>
     <button class="btn btn-primary btn-block" data-i18n="mb_create" onclick="doCreateBot()"></button>
     <div class="form-error" id="newbot-err"></div>
   </div>
@@ -892,6 +965,11 @@
     <button class="modal-close" onclick="closeModals()" style="background:rgba(0,0,0,.5)">×</button>
     <img id="img-modal-src" src="" alt="receipt">
   </div>
+</div>
+
+<!-- ============ GENERIC MODAL (customer details etc.) ============ -->
+<div class="modal-overlay" id="modal-generic">
+  <div class="modal" id="modal-generic-inner" style="max-width:560px; padding:0; overflow:hidden;"></div>
 </div>
 
 <!-- ============ APP ============ -->
@@ -1345,6 +1423,10 @@
           <div class="form-group"><label data-i18n="a_tariff_mem"></label><input class="form-control" type="number" id="atariff-mem" placeholder="512" min="1"></div>
           <div class="form-group"><label data-i18n="a_tariff_storage"></label><input class="form-control" type="number" id="atariff-storage" placeholder="1024" min="1"></div>
         </div>
+        <div class="form-group" style="max-width:420px">
+          <label data-i18n="a_tariff_days"></label>
+          <input class="form-control" type="number" id="atariff-days" placeholder="30" min="1" value="30">
+        </div>
         <button class="btn btn-admin" style="width:auto" data-i18n="a_tariff_create" onclick="adminCreateTariff()"></button>
         <div id="atariff-msg"></div>
         <div class="sub-h">📋 <span data-i18n="a_tariff_list"></span></div>
@@ -1520,7 +1602,7 @@ const I18N = {
     amenu_adash:"Boshqaruv", amenu_ausers:"Foydalanuvchilar", amenu_abots:"Barcha botlar",
     amenu_afiles:"Mijoz fayllari", amenu_atopups:"To'lov so'rovlari", amenu_abalance:"Balans boshqaruv",
     amenu_apromos:"Promokodlar", amenu_abroadcast:"Hammaga xabar", amenu_achat:"Muloqot",
-    amenu_alogs:"Loglar", amenu_asettings:"Sozlamalar",
+    amenu_alogs:"Loglar", amenu_asettings:"Sozlamalar", amenu_atariffs:"Tariflar",
     a_users_t:"Foydalanuvchilar ro'yxati", a_bots_t:"Barcha botlar", a_files_t:"Mijozlar qo'shgan fayllar",
     a_files_desc:"Mijoz botiga fayl qo'shganda — bu yerga tushadi (bot egasi va nick bilan).",
     a_topups_t:"Balans to'ldirish so'rovlari", a_topups_desc:"Mijoz chek tashlagan — tasdiqlang, pul tushadi.",
@@ -1551,7 +1633,33 @@ const I18N = {
     alog_tariff:"Tarif yaratildi: {name}",
     alog_tariff_del:"Tarif o'chirildi: {name}",
     /* notif broadcast */
-    nb_broadcast:"📢 E'lon (admin)"
+    nb_broadcast:"📢 E'lon (admin)",
+    /* ===== 1 tariff = 1 bot ===== */
+    mb_tariff:"Tarifni tanlang",
+    mb_no_tariffs:"Tariflar mavjud emas",
+    mb_no_tariffs_d:"Admin hozircha hech qanday tarif yaratmagan. Tarif paydo bo'lgungaacha bot yarata olmaysiz.",
+    mb_balance:"Balansingiz",
+    mb_after:"Yechilgandan so'ng",
+    mb_insufficient:"Balans yetarli emas. Avval balansni to'ldiring.",
+    mb_creating:"Yaratilmoqda...",
+    mb_1t1b:"1 tarif = 1 bot",
+    mb_1t1b_note:"Har bir bot uchun alohida tarif sotib olinadi. Yangi bot ochish uchun yana bitta tarif tanlang.",
+    mb_pick_first:"Avval tarifni tanlang",
+    bot_tariff:"Tarif", bot_expires:"Tugaydi", bot_no_tariff:"—",
+    p_mybots_1t1b:"Har bir bot alohida tarif sotib olib yaratilgan.",
+    /* ===== admin customer list ===== */
+    cust_search:"Nick bo'yicha qidirish...",
+    cust_filter_all:"Barchasi", cust_filter_bots:"Botlari bor", cust_filter_nobots:"Botsiz", cust_filter_active:"Faol boti bor",
+    cust_joined:"A'zo", cust_view:"Tafsilotlar", cust_edit_bal:"Balansni tahrirlash",
+    cust_details:"Mijoz tafsilotlari", cust_bots_count:"Botlar", cust_active_bots:"Faol botlar",
+    cust_new_bal:"Yangi balans (so'm)", cust_bal_updated:"Balans yangilandi", cust_invalid_bal:"Noto'g'ri summa",
+    cust_total:"Jami",
+    /* ===== admin bot control ===== */
+    a_approve_bot:"Faol qilish", a_stop_bot:"To'xtatish", a_bot_approved:"Bot faol qilindi",
+    /* ===== tariff extras ===== */
+    a_tariff_days:"Muddat (kun)", a_tariff_active:"Faol", a_tariff_inactive:"O'chirilgan",
+    a_tariff_toggle_on:"Yoqish", a_tariff_toggle_off:"O'chirish", p_tariffs_days:"kunlik",
+    tx_bot_create:"Bot yaratish: {name} ({tariff})"
   },
   ru: {
     nav_login:"Войти", nav_signup:"Регистрация", nav_logout:"Выйти",
@@ -1666,7 +1774,7 @@ const I18N = {
     amenu_adash:"Управление", amenu_ausers:"Пользователи", amenu_abots:"Все боты",
     amenu_afiles:"Файлы клиентов", amenu_atopups:"Заявки на оплату", amenu_abalance:"Баланс",
     amenu_apromos:"Промокоды", amenu_abroadcast:"Сообщение всем", amenu_achat:"Чат",
-    amenu_alogs:"Логи", amenu_asettings:"Настройки",
+    amenu_alogs:"Логи", amenu_asettings:"Настройки", amenu_atariffs:"Тарифы",
     a_users_t:"Список пользователей", a_bots_t:"Все боты", a_files_t:"Файлы клиентов",
     a_files_desc:"Когда клиент добавляет файл боту — он попадает сюда (с владельцем).",
     a_topups_t:"Заявки на пополнение", a_topups_desc:"Клиент приложил чек — подтвердите, деньги зачислятся.",
@@ -1695,7 +1803,27 @@ const I18N = {
     alog_promo_del:"Промокод удалён: {code}",
     alog_tariff:"Тариф создан: {name}",
     alog_tariff_del:"Тариф удалён: {name}",
-    nb_broadcast:"📢 Объявление (админ)"
+    nb_broadcast:"📢 Объявление (админ)",
+    mb_tariff:"Выберите тариф",
+    mb_no_tariffs:"Тарифов нет",
+    mb_no_tariffs_d:"Админ ещё не создал ни одного тарифа. Пока тарифов нет, создать бота нельзя.",
+    mb_balance:"Ваш баланс", mb_after:"После списания",
+    mb_insufficient:"Недостаточно средств. Сначала пополните баланс.",
+    mb_creating:"Создание...", mb_1t1b:"1 тариф = 1 бот",
+    mb_1t1b_note:"На каждого бота — отдельный тариф. Для нового бота выберите тариф ещё раз.",
+    mb_pick_first:"Сначала выберите тариф",
+    bot_tariff:"Тариф", bot_expires:"Действует до", bot_no_tariff:"—",
+    p_mybots_1t1b:"Каждый бот создаётся по отдельному тарифу.",
+    cust_search:"Поиск по нику...",
+    cust_filter_all:"Все", cust_filter_bots:"С ботами", cust_filter_nobots:"Без ботов", cust_filter_active:"С активным ботом",
+    cust_joined:"Регистрация", cust_view:"Подробнее", cust_edit_bal:"Изменить баланс",
+    cust_details:"Детали клиента", cust_bots_count:"Боты", cust_active_bots:"Активные боты",
+    cust_new_bal:"Новый баланс (сум)", cust_bal_updated:"Баланс обновлён", cust_invalid_bal:"Неверная сумма",
+    cust_total:"Всего",
+    a_approve_bot:"Активировать", a_stop_bot:"Остановить", a_bot_approved:"Бот активирован",
+    a_tariff_days:"Срок (дней)", a_tariff_active:"Активен", a_tariff_inactive:"Выключен",
+    a_tariff_toggle_on:"Включить", a_tariff_toggle_off:"Выключить", p_tariffs_days:"дней",
+    tx_bot_create:"Создание бота: {name} ({tariff})"
   },
   en: {
     nav_login:"Log in", nav_signup:"Sign up", nav_logout:"Log out",
@@ -1810,7 +1938,7 @@ const I18N = {
     amenu_adash:"Manage", amenu_ausers:"Users", amenu_abots:"All bots",
     amenu_afiles:"Client files", amenu_atopups:"Payment requests", amenu_abalance:"Balance",
     amenu_apromos:"Promo codes", amenu_abroadcast:"Broadcast", amenu_achat:"Chat",
-    amenu_alogs:"Logs", amenu_asettings:"Settings",
+    amenu_alogs:"Logs", amenu_asettings:"Settings", amenu_atariffs:"Tariffs",
     a_users_t:"Users list", a_bots_t:"All bots", a_files_t:"Client files",
     a_files_desc:"When a client adds a file to their bot — it lands here (with owner).",
     a_topups_t:"Top-up requests", a_topups_desc:"Client attached a receipt — approve, money is credited.",
@@ -1839,7 +1967,27 @@ const I18N = {
     alog_promo_del:"Promo deleted: {code}",
     alog_tariff:"Tariff created: {name}",
     alog_tariff_del:"Tariff deleted: {name}",
-    nb_broadcast:"📢 Announcement (admin)"
+    nb_broadcast:"📢 Announcement (admin)",
+    mb_tariff:"Choose a tariff",
+    mb_no_tariffs:"No tariffs available",
+    mb_no_tariffs_d:"The admin has not created any tariff yet. You cannot create a bot until a tariff exists.",
+    mb_balance:"Your balance", mb_after:"After charge",
+    mb_insufficient:"Insufficient balance. Please top up first.",
+    mb_creating:"Creating...", mb_1t1b:"1 tariff = 1 bot",
+    mb_1t1b_note:"Each bot requires its own tariff purchase. To open another bot, pick a tariff again.",
+    mb_pick_first:"Pick a tariff first",
+    bot_tariff:"Tariff", bot_expires:"Expires", bot_no_tariff:"—",
+    p_mybots_1t1b:"Each bot is created with its own purchased tariff.",
+    cust_search:"Search by nick...",
+    cust_filter_all:"All", cust_filter_bots:"With bots", cust_filter_nobots:"No bots", cust_filter_active:"Has active bot",
+    cust_joined:"Joined", cust_view:"Details", cust_edit_bal:"Edit balance",
+    cust_details:"Customer details", cust_bots_count:"Bots", cust_active_bots:"Active bots",
+    cust_new_bal:"New balance (so'm)", cust_bal_updated:"Balance updated", cust_invalid_bal:"Invalid amount",
+    cust_total:"Total",
+    a_approve_bot:"Activate", a_stop_bot:"Stop", a_bot_approved:"Bot activated",
+    a_tariff_days:"Duration (days)", a_tariff_active:"Active", a_tariff_inactive:"Disabled",
+    a_tariff_toggle_on:"Enable", a_tariff_toggle_off:"Disable", p_tariffs_days:"days",
+    tx_bot_create:"Bot created: {name} ({tariff})"
   }
 };
 
@@ -1902,7 +2050,8 @@ async function api(path, opts){
   return j;
 }
 function srvErr(e){
-  const m = { nicktaken:'err_nicktaken', emailtaken:'err_emailtaken', wrong:'err_wrong', badnick:'err_nickshort', bademail:'err_email', badpass:'err_passshort', toomany:'err_wrong' };
+  const m = { nicktaken:'err_nicktaken', emailtaken:'err_emailtaken', wrong:'err_wrong', badnick:'err_nickshort', bademail:'err_email', badpass:'err_passshort', toomany:'err_wrong',
+    badbotname:'err_botname', badtariff:'mb_no_tariffs', insufficient:'mb_insufficient', toomanybots:'mb_1t1b_note', toolarge:'msg_file_too_big' };
   if (m[e.code]) return t(m[e.code]);
   if (e.code === 'network') return 'Server bilan aloqa yo‘q. Qayta urinib ko‘ring.';
   return 'Server xatosi: ' + (e.code || '');
@@ -2072,6 +2221,17 @@ function fmtTime(ts){
 function esc(s){ const d=document.createElement('div'); d.textContent = s==null?'':String(s); return d.innerHTML; }
 function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
 
+/* lightweight toast notification (persists ~3s, survives re-renders) */
+let _toastTimer = null;
+function toast(msg, type){
+  let el = document.getElementById('cc-toast');
+  if (!el){ el = document.createElement('div'); el.id = 'cc-toast'; document.body.appendChild(el); }
+  el.textContent = msg;
+  el.className = 'cc-toast show' + (type ? ' '+type : '');
+  clearTimeout(_toastTimer);
+  _toastTimer = setTimeout(() => { el.className = 'cc-toast'; }, 3200);
+}
+
 /* compress image to dataURL to keep localStorage small */
 function compressImage(file, cb, maxW){
   maxW = maxW || 900;
@@ -2113,7 +2273,7 @@ function openModal(name){
   m.classList.add('open');
   if (name === 'login') setTimeout(()=>document.getElementById('login-nick').focus(), 100);
   if (name === 'register') setTimeout(()=>document.getElementById('reg-nick').focus(), 100);
-  if (name === 'newbot') setTimeout(()=>document.getElementById('newbot-name').focus(), 100);
+  if (name === 'newbot'){ renderNewbotTariffs(); }
 }
 function closeModals(){
   document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('open'));
@@ -2510,27 +2670,90 @@ function renderBots(){
   const grid = document.getElementById('bots-grid');
   let html = u.bots.map((b,i)=>{
     const filesCount = (b.files||[]).length;
+    const tfLine = b.tariffName ? (esc(b.tariffName) + ' · ' + t('bot_expires') + ' ' + fmtTime(b.expiresAt)) : t('bot_no_tariff');
     return '<div class="bot-tile" onclick="openBot('+i+')">'+
       '<div class="bt-head"><div class="bt-ic">🤖</div><div><div class="bt-name">'+esc(b.name)+'</div>'+
-      '<div class="bt-meta">'+filesCount+' '+t('files_word')+' · '+fmtTime(b.createdAt)+'</div></div></div>'+
+      '<div class="bt-meta">'+filesCount+' '+t('files_word')+' · '+tfLine+'</div></div></div>'+
       '<div class="bt-stat">'+botStatusPill(b.status)+'</div></div>';
   }).join('');
   html += '<div class="bot-tile new-bot-tile" onclick="openModal(\'newbot\')"><div class="plus">＋</div><div class="lb">'+t('p_mybots_deploy')+'</div></div>';
   grid.innerHTML = html;
+}
+
+/* ---- 1 tariff = 1 bot: tariff picker inside the new-bot modal ---- */
+let newbotSelectedTariff = null;
+function activeTariffs(){ return (state.tariffs||[]).filter(x => x.active !== false); }
+function renderNewbotTariffs(){
+  newbotSelectedTariff = null;
+  const u = user();
+  const box = document.getElementById('newbot-tariffs');
+  const summary = document.getElementById('newbot-summary');
+  const err = document.getElementById('newbot-err'); if (err) err.textContent = '';
+  const nameInput = document.getElementById('newbot-name'); if (nameInput) nameInput.value = '';
+  if (summary) summary.innerHTML = '';
+  const list = activeTariffs();
+  if (!list.length){
+    box.innerHTML = '<div class="alert alert-warn" style="margin:0"><span>📦</span><div><b>'+t('mb_no_tariffs')+'</b><br><span style="font-size:.82rem">'+t('mb_no_tariffs_d')+'</span></div></div>';
+    return;
+  }
+  let html = '<div style="font-size:.82rem;color:var(--muted);margin-bottom:8px">'+t('mb_balance')+': <b style="color:var(--success2)">'+fmtMoney(u.balance)+' '+t('som')+'</b></div>';
+  html += list.map(tf=>{
+    const cant = u.balance < tf.price;
+    const cls = cant ? ' disabled' : '';
+    const days = Number(tf.days)||30;
+    return '<div class="tariff-pick'+cls+'" data-tid="'+esc(tf.id)+'" onclick="selectNewbotTariff(\''+esc(tf.id)+'\')">'+
+      '<div><div class="tp-name">'+esc(tf.name)+'</div>'+
+      '<div class="tp-meta">'+days+' '+t('p_tariffs_days')+(cant?' · ⚠ '+t('mb_insufficient'):'')+'</div></div>'+
+      '<div class="tp-price">'+fmtMoney(tf.price)+' '+t('som')+'</div></div>';
+  }).join('');
+  box.innerHTML = html;
+}
+function selectNewbotTariff(id){
+  const tf = (state.tariffs||[]).find(x => String(x.id)===String(id) && x.active !== false);
+  if (!tf) return;
+  const u = user();
+  if (u.balance < tf.price){ document.getElementById('newbot-err').textContent = t('mb_insufficient'); return; }
+  newbotSelectedTariff = tf;
+  document.getElementById('newbot-err').textContent = '';
+  document.querySelectorAll('#newbot-tariffs .tariff-pick').forEach(el=>{
+    el.classList.toggle('selected', el.dataset.tid === String(id));
+  });
+  const after = u.balance - tf.price;
+  document.getElementById('newbot-summary').innerHTML =
+    '<div class="summary-box">'+
+      '<div class="srow"><span>'+t('mb_tariff')+'</span><b>'+esc(tf.name)+'</b></div>'+
+      '<div class="srow"><span>'+t('a_tariff_days')+'</span><b>'+(Number(tf.days)||30)+' '+t('p_tariffs_days')+'</b></div>'+
+      '<div class="srow"><span>'+t('p_balance_amount')+'</span><b style="color:var(--success2)">'+fmtMoney(tf.price)+' '+t('som')+'</b></div>'+
+      '<div class="srow total"><span>'+t('mb_after')+'</span><b style="color:var(--success2)">'+fmtMoney(after)+' '+t('som')+'</b></div>'+
+    '</div>';
 }
 function doCreateBot(){
   const u = user();
   const name = document.getElementById('newbot-name').value.trim();
   const err = document.getElementById('newbot-err');
   err.textContent = '';
+  const list = activeTariffs();
+  if (!list.length){ err.textContent = t('mb_no_tariffs'); return; }
+  if (!newbotSelectedTariff){ err.textContent = t('mb_pick_first'); return; }
   if (!name || name.length < 2){ err.textContent = t('err_botname'); return; }
-  const bot = { id: uid(), name, status:'off', mainFile:null, files:[], logs:[], createdAt: Date.now() };
-  u.bots.push(bot);
-  addActivity(u, 'act_bot_create', { name });
-  save();
-  closeModals();
-  document.getElementById('newbot-name').value = '';
-  openBot(u.bots.length - 1);
+  if (u.balance < newbotSelectedTariff.price){ err.textContent = t('mb_insufficient'); return; }
+  const btn = document.querySelector('#modal-newbot .btn-primary');
+  if (btn){ btn.disabled = true; btn.textContent = t('mb_creating'); }
+  api('/api/create-bot', { method: 'POST', body: { name: name, tariffId: newbotSelectedTariff.id } })
+    .then(res => {
+      applyServer(res);
+      // find the freshly-created bot (by id if server returned it, else last)
+      let idx = res.botId ? Math.max(0, u.bots.findIndex(b => b.id === res.botId)) : u.bots.length - 1;
+      if (idx < 0) idx = u.bots.length - 1;
+      closeModals();
+      if (btn){ btn.disabled = false; btn.textContent = ''; btn.setAttribute('data-i18n','mb_create'); applyI18n(); }
+      openBot(idx);
+      renderDrawer(); updateNav();
+    })
+    .catch(e => {
+      if (btn){ btn.disabled = false; btn.textContent = ''; btn.setAttribute('data-i18n','mb_create'); applyI18n(); }
+      err.textContent = srvErr(e) || t('mb_insufficient');
+    });
 }
 let currentBotIdx = -1;
 function curBot(){
@@ -2560,7 +2783,10 @@ function renderBotDetail(){
   const b = curBot();
   if (!b){ showPage('mybots'); return; }
   document.getElementById('bd-name').textContent = b.name;
-  document.getElementById('bd-sub').textContent = (b.files||[]).length + ' ' + t('files_word') + ' · ' + fmtTime(b.createdAt);
+  const tfInfo = b.tariffName
+    ? (t('bot_tariff') + ': ' + b.tariffName + ' · ' + t('bot_expires') + ' ' + fmtTime(b.expiresAt))
+    : ((b.files||[]).length + ' ' + t('files_word') + ' · ' + fmtTime(b.createdAt));
+  document.getElementById('bd-sub').textContent = tfInfo;
   const st = document.getElementById('bd-status');
   st.innerHTML = botStatusPill(b.status);
   // startup select
@@ -2755,12 +2981,17 @@ function botDelete(){
   const u = user();
   const b = curBot(); if (!b) return;
   if (!confirm(t('bd_delete')+' — '+b.name+'?')) return;
-  u.bots.splice(currentBotIdx, 1);
-  // remove related fileUploads
-  state.fileUploads = (state.fileUploads||[]).filter(f => f.botId !== b.id);
-  save();
-  currentBotIdx = -1;
-  showPage('mybots');
+  const idx = currentBotIdx;
+  api('/api/delete-bot', { method: 'POST', body: { id: b.id } })
+    .then(res => {
+      applyServer(res);
+      // remove related fileUploads locally too
+      state.fileUploads = (state.fileUploads||[]).filter(f => f.botId !== b.id);
+      currentBotIdx = -1;
+      showPage('mybots');
+      renderDrawer();
+    })
+    .catch(e => { toast(srvErr(e) || t('msg_bot_deleted'), 'err'); });
 }
 
 /* ============================================================
@@ -2799,14 +3030,16 @@ function tariffCardHtml(tf, idx){
   const popular = idx === 0 ? ' popular' : '';
   const tagAttr = idx === 0 ? ' data-tag="'+t('plan_popular')+'"' : '';
   const cpu = Number(tf.cpu), mem = Number(tf.mem), storage = Number(tf.storage);
+  const days = Number(tf.days) || 30;
   return '<div class="price-card'+popular+'"'+tagAttr+'>'+
     '<h3>'+esc(tf.name)+'</h3>'+
     '<div class="amount">'+fmtMoney(tf.price)+'</div>'+
-    '<div class="unit">'+t('p_tariffs_per_month')+'</div>'+
+    '<div class="unit">'+days+' '+t('p_tariffs_days')+'</div>'+
     '<ul>'+
       '<li>🖥 '+t('p_tariffs_cpu')+': '+cpu+' '+t('p_tariffs_cores')+'</li>'+
       '<li>🧠 '+t('p_tariffs_mem')+': '+fmtMoney(mem)+' MB</li>'+
       '<li>💾 '+t('p_tariffs_storage')+': '+fmtMoney(storage)+' MB</li>'+
+      '<li>🎟 '+t('mb_1t1b')+'</li>'+
     '</ul>'+
     '<button class="btn '+(idx===0?'btn-primary':'btn-outline')+' btn-block" data-i18n="p_tariffs_choose" onclick="openModal(\'register\')"></button>'+
   '</div>';
@@ -2814,7 +3047,7 @@ function tariffCardHtml(tf, idx){
 function renderLandingTariffs(){
   const grid = document.getElementById('landing-tariffs');
   if (!grid) return;
-  const list = state.tariffs || [];
+  const list = activeTariffs();
   if (!list.length){
     grid.innerHTML = '<div style="grid-column:1/-1" class="empty"><div class="ic">📦</div><p>'+t('p_tariffs_land_empty')+'</p></div>';
     return;
@@ -2824,29 +3057,35 @@ function renderLandingTariffs(){
 function renderTariffs(){
   const grid = document.getElementById('cust-tariffs-grid');
   if (!grid) return;
-  const list = state.tariffs || [];
+  const list = activeTariffs();
   if (!list.length){
-    grid.innerHTML = '<div style="grid-column:1/-1" class="empty"><div class="ic">📦</div><p>'+t('p_tariffs_empty')+'</p></div>';
+    grid.innerHTML = '<div style="grid-column:1/-1" class="empty"><div class="ic">📦</div><p>'+t('p_tariffs_empty')+'</p><p style="font-size:.82rem;margin-top:6px">'+t('mb_no_tariffs_d')+'</p></div>';
     return;
   }
-  grid.innerHTML = list.map((tf,i)=>tariffCardHtml(tf,i)).join('');
+  grid.innerHTML = '<div style="grid-column:1/-1;margin-bottom:8px" class="alert alert-info"><span>🎟</span><div>'+t('mb_1t1b_note')+'</div></div>' + list.map((tf,i)=>tariffCardHtml(tf,i)).join('');
 }
 function renderATariffs(){
   const msg = document.getElementById('atariff-msg');
   if (msg) msg.innerHTML = '';
-  ['atariff-name','atariff-price','atariff-cpu','atariff-mem','atariff-storage'].forEach(id=>{
-    const el = document.getElementById(id); if (el) el.value = '';
+  ['atariff-name','atariff-price','atariff-cpu','atariff-mem','atariff-storage','atariff-days'].forEach(id=>{
+    const el = document.getElementById(id); if (el && id!=='atariff-days') el.value = '';
   });
+  const dEl = document.getElementById('atariff-days'); if (dEl) dEl.value = '30';
   const box = document.getElementById('atariff-list');
   const list = state.tariffs || [];
-  if (!list.length){ box.innerHTML = '<p style="color:var(--muted);font-size:.9rem">'+t('a_tariff_empty')+'</p>'; return; }
+  if (!list.length){ box.innerHTML = '<div class="alert alert-warn" style="margin:0"><span>📦</span><div><b>'+t('a_tariff_empty')+'</b><br><span style="font-size:.82rem">'+t('mb_no_tariffs_d')+'</span></div></div>'; return; }
   box.innerHTML = list.map(tf=>{
     const cpu = Number(tf.cpu), mem = Number(tf.mem), storage = Number(tf.storage);
+    const days = Number(tf.days) || 30;
+    const isActive = tf.active !== false;
     return '<div class="promo-row">'+
-      '<div><div style="font-weight:700">'+esc(tf.name)+'</div>'+
-      '<div class="pr-amt">'+fmtMoney(tf.price)+' '+t('som')+' / '+t('p_tariffs_per_month').split(' / ')[1]+'</div>'+
+      '<div><div style="font-weight:700">'+esc(tf.name)+' <span class="badge '+(isActive?'badge-in':'')+'" style="background:'+(isActive?'rgba(34,197,94,.15)':'rgba(148,163,184,.15)')+';color:'+(isActive?'var(--success2)':'var(--muted)')+';font-size:.7rem">'+(isActive?t('a_tariff_active'):t('a_tariff_inactive'))+'</span></div>'+
+      '<div class="pr-amt">'+fmtMoney(tf.price)+' '+t('som')+' / '+days+' '+t('p_tariffs_days')+'</div>'+
       '<div class="pr-meta">🖥 '+cpu+' '+t('p_tariffs_cores')+' · 🧠 '+fmtMoney(mem)+' MB · 💾 '+fmtMoney(storage)+' MB</div></div>'+
-      '<button class="mini-btn danger" onclick="adminDeleteTariff(\''+tf.id+'\')">✕</button></div>';
+      '<div class="row-actions">'+
+        '<button class="mini-btn" onclick="adminToggleTariff(\''+String(tf.id).replace(/'/g,"\\'")+'\')">'+(isActive?t('a_tariff_toggle_off'):t('a_tariff_toggle_on'))+'</button>'+
+        '<button class="mini-btn danger" onclick="adminDeleteTariff(\''+String(tf.id).replace(/'/g,"\\'")+'\')">✕</button>'+
+      '</div></div>';
   }).join('');
 }
 function adminCreateTariff(){
@@ -2855,17 +3094,28 @@ function adminCreateTariff(){
   const cpu = parseInt(document.getElementById('atariff-cpu').value, 10);
   const mem = parseInt(document.getElementById('atariff-mem').value, 10);
   const storage = parseInt(document.getElementById('atariff-storage').value, 10);
+  const days = parseInt(document.getElementById('atariff-days').value, 10) || 30;
   const box = document.getElementById('atariff-msg');
   if (!name || name.length < 2 || !price || price < 1 || !cpu || cpu < 1 || !mem || mem < 1 || !storage || storage < 1){
     box.innerHTML = '<div class="flash flash-err">⚠ '+t('msg_tariff_invalid')+'</div>'; return;
   }
-  const tf = { id: uid(), name, price, cpu, mem, storage, createdAt: Date.now() };
+  const tf = { id: uid(), name, price, cpu, mem, storage, days, active: true, createdAt: Date.now() };
   state.tariffs.push(tf);
   addAdminLog('alog_tariff', { name });
   save();
   renderATariffs();
   renderLandingTariffs();
-  box.innerHTML = '<div class="flash flash-ok">✓ '+t('msg_tariff_created')+esc(name)+' ('+fmtMoney(price)+' '+t('som')+')</div>';
+  box.innerHTML = '<div class="flash flash-ok">✓ '+t('msg_tariff_created')+esc(name)+' ('+fmtMoney(price)+' '+t('som')+' · '+days+' '+t('p_tariffs_days')+')</div>';
+}
+function adminToggleTariff(id){
+  const tf = (state.tariffs||[]).find(x=>String(x.id)===String(id));
+  if (!tf) return;
+  tf.active = (tf.active === false);
+  addAdminLog(tf.active ? 'alog_tariff' : 'alog_tariff_del', { name: tf.name });
+  save();
+  renderATariffs();
+  renderLandingTariffs();
+  toast(tf.active ? t('a_tariff_active') : t('a_tariff_inactive'), 'ok');
 }
 function adminDeleteTariff(id){
   if (!confirm('?')) return;
@@ -3023,13 +3273,140 @@ function renderADash(){
 /* ============================================================
    ADMIN: USERS
    ============================================================ */
+/* ---- generic modal helper ---- */
+function openGenericModal(html){
+  const inner = document.getElementById('modal-generic-inner');
+  inner.innerHTML = html;
+  document.getElementById('modal-generic').classList.add('open');
+}
+function closeGenericModal(){
+  document.getElementById('modal-generic').classList.remove('open');
+  document.getElementById('modal-generic-inner').innerHTML = '';
+}
+document.addEventListener('click', e => { if (e.target && e.target.id === 'modal-generic') closeGenericModal(); });
+
+/* ---- admin: customer list (search / filter / details / balance edit) ---- */
+let custFilter = 'all';
+let custQuery = '';
+function setCustFilter(f){
+  custFilter = f;
+  renderAUsers();
+}
+function botIsActive(b){ return b && (b.status==='active' || b.status==='starting') && (!b.expiresAt || Number(b.expiresAt) > Date.now()); }
 function renderAUsers(){
   const users = Object.values(state.users).filter(u=>!u.isAdmin);
   const box = document.getElementById('ausers-box');
-  if (!users.length){ box.innerHTML = '<div class="empty"><div class="ic">👥</div><p>'+t('a_no_users')+'</p></div>'; return; }
-  box.innerHTML = '<table><thead><tr><th>'+t('p_admin_user')+'</th><th>'+t('p_profile_email')+'</th><th>'+t('p_profile_bal')+'</th><th>🤖</th><th>'+t('p_profile_id')+'</th></tr></thead><tbody>' +
-    users.map(u=>'<tr><td><b>'+esc(u.nick)+'</b></td><td>'+esc(u.email||'—')+'</td><td>'+fmtMoney(u.balance)+' '+t('som')+'</td><td>'+(u.bots||[]).length+'</td><td><code>'+u.clientId+'</code></td></tr>').join('')
-    + '</tbody></table>';
+  if (!box) return;
+  if (!users.length){
+    box.innerHTML = '<div class="empty"><div class="ic">👥</div><p>'+t('a_no_users')+'</p></div>';
+    return;
+  }
+  // preserve current search input value across re-renders
+  const qel = document.getElementById('cust-search');
+  if (qel) custQuery = qel.value;
+  let list = users.slice();
+  if (custQuery) list = list.filter(u => String(u.nick||'').toLowerCase().includes(custQuery.toLowerCase().trim()));
+  if (custFilter === 'withbots') list = list.filter(u => (u.bots||[]).length > 0);
+  else if (custFilter === 'nobots') list = list.filter(u => !(u.bots||[]).length);
+  else if (custFilter === 'active') list = list.filter(u => (u.bots||[]).some(botIsActive));
+
+  const chips = ['all','withbots','nobots','active'].map(f =>
+    '<span class="chip'+(custFilter===f?' active':'')+'" onclick="setCustFilter(\''+f+'\')">'+t('cust_filter_'+f)+'</span>'
+  ).join('');
+
+  const toolbar =
+    '<div class="cust-toolbar">'+
+      '<div class="search-box"><span class="si">🔍</span><input id="cust-search" value="'+esc(custQuery)+'" placeholder="'+esc(t('cust_search'))+'" oninput="renderAUsers()"></div>'+
+      '<div class="cust-count">'+t('cust_total')+': '+list.length+'</div>'+
+    '</div>'+
+    '<div class="filter-chips">'+chips+'</div>';
+
+  if (!list.length){
+    box.innerHTML = toolbar + '<div class="empty"><div class="ic">🔍</div><p>'+t('a_no_users')+'</p></div>';
+    // restore focus to search
+    setTimeout(()=>{ const e=document.getElementById('cust-search'); if(e){ e.focus(); e.setSelectionRange(e.value.length,e.value.length); } }, 0);
+    return;
+  }
+
+  const rows = list.map(u => {
+    const bc = (u.bots||[]).length;
+    const ac = (u.bots||[]).filter(botIsActive).length;
+    return '<tr class="clickable" onclick="viewCustomer(\''+esc(u.nick)+'\')">'+
+      '<td><div style="display:flex;align-items:center;gap:10px"><span class="mini-avatar">'+esc((u.nick||'?').charAt(0).toUpperCase())+'</span><div><b>'+esc(u.nick)+'</b><div style="font-size:.74rem;color:var(--muted2);margin-top:2px">'+esc(u.email||'—')+'</div></div></div></td>'+
+      '<td><b>'+fmtMoney(u.balance)+'</b> '+t('som')+'</td>'+
+      '<td>'+(bc>0?'<span class="badge badge-in" style="background:rgba(59,130,246,.15);color:var(--primary2)">'+bc+' '+t('bot_word')+'</span>':'<span style="color:var(--muted2)">—</span>')+'</td>'+
+      '<td>'+(ac>0?'<span class="badge badge-in" style="background:rgba(34,197,94,.15);color:var(--success2)">'+ac+'</span>':'<span style="color:var(--muted2)">0</span>')+'</td>'+
+      '<td><code>'+u.clientId+'</code></td>'+
+      '<td onclick="event.stopPropagation()" class="row-actions">'+
+        '<button class="mini-btn" onclick="viewCustomer(\''+esc(u.nick)+'\')">'+t('cust_view')+'</button>'+
+        '<button class="mini-btn" onclick="editCustomerBalance(\''+esc(u.nick)+'\')">✎</button>'+
+      '</td>'+
+    '</tr>';
+  }).join('');
+
+  box.innerHTML = toolbar +
+    '<div class="table-wrap"><table><thead><tr>'+
+      '<th>'+t('p_admin_user')+'</th><th>'+t('p_profile_bal')+'</th><th>🤖</th><th>✓</th><th>'+t('p_profile_id')+'</th><th></th>'+
+    '</tr></thead><tbody>' + rows + '</tbody></table></div>';
+
+  // restore caret position in search input
+  const ne = document.getElementById('cust-search');
+  if (ne){ ne.focus(); ne.setSelectionRange(ne.value.length, ne.value.length); }
+}
+
+function viewCustomer(nick){
+  const u = state.users[nick]; if (!u) return;
+  const bc = (u.bots||[]).length;
+  const ac = (u.bots||[]).filter(botIsActive).length;
+  const botsHtml = (u.bots||[]).length
+    ? '<div class="table-wrap"><table><thead><tr><th>🤖</th><th>'+t('bot_tariff')+'</th><th>'+t('p_admin_status')+'</th><th>'+t('bot_expires')+'</th></tr></thead><tbody>'+
+      (u.bots||[]).map(b => '<tr><td><b>'+esc(b.name)+'</b></td><td>'+(b.tariffName?esc(b.tariffName):'<span style="color:var(--muted2)">'+t('bot_no_tariff')+'</span>')+'</td><td>'+botStatusPill(b.status)+'</td><td>'+(b.expiresAt?fmtTime(b.expiresAt):'—')+'</td></tr>').join('')+
+      '</tbody></table></div>'
+    : '<div class="empty" style="padding:24px 10px"><p style="color:var(--muted2)">'+t('p_admin_nobots')+'</p></div>';
+  openGenericModal(
+    '<div style="padding:18px 22px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border)">'+
+      '<div style="display:flex;align-items:center;gap:12px"><span class="mini-avatar" style="width:42px;height:42px;font-size:1.05rem">'+esc((u.nick||'?').charAt(0).toUpperCase())+'</span><div><div style="font-weight:700;font-size:1.1rem">'+esc(u.nick)+'</div><div style="font-size:.76rem;color:var(--muted2)">ID '+u.clientId+'</div></div></div>'+
+      '<button class="modal-close" onclick="closeGenericModal()">×</button>'+
+    '</div>'+
+    '<div style="padding:20px 22px;max-height:70vh;overflow-y:auto">'+
+      '<div style="border:1px solid var(--border);border-radius:12px;padding:16px 18px;margin-bottom:16px">'+
+        '<div class="info-row"><span class="k">'+t('p_profile_nick')+'</span><span class="v">'+esc(u.nick)+'</span></div>'+
+        '<div class="info-row"><span class="k">'+t('p_profile_email')+'</span><span class="v">'+esc(u.email||'—')+'</span></div>'+
+        '<div class="info-row"><span class="k">'+t('p_profile_id')+'</span><span class="v"><code>'+u.clientId+'</code></span></div>'+
+        '<div class="info-row"><span class="k">'+t('p_profile_bal')+'</span><span class="v" style="color:var(--success2)">'+fmtMoney(u.balance)+' '+t('som')+'</span></div>'+
+        '<div class="info-row"><span class="k">'+t('cust_bots_count')+'</span><span class="v">'+bc+'</span></div>'+
+        '<div class="info-row"><span class="k">'+t('cust_active_bots')+'</span><span class="v">'+ac+'</span></div>'+
+      '</div>'+
+      '<div style="font-weight:700;margin-bottom:10px">🤖 '+t('cust_bots_count')+'</div>'+
+      botsHtml+
+    '</div>'+
+    '<div style="padding:14px 22px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:10px">'+
+      '<button class="btn btn-outline btn-sm" onclick="closeGenericModal()">'+t('back')+'</button>'+
+      '<button class="btn btn-primary btn-sm" onclick="editCustomerBalance(\''+esc(u.nick)+'\')">✎ '+t('cust_edit_bal')+'</button>'+
+    '</div>'
+  );
+}
+
+function editCustomerBalance(nick){
+  const u = state.users[nick]; if (!u) return;
+  const v = prompt(t('cust_new_bal'), String(u.balance || 0));
+  if (v === null) return;
+  const num = parseInt(String(v).replace(/\D/g,''), 10);
+  if (isNaN(num) || num < 0){ toast(t('cust_invalid_bal'), 'err'); return; }
+  const delta = num - (u.balance || 0);
+  if (delta === 0){ closeGenericModal(); return; }
+  // apply via admin sync: send _dBal delta for that user
+  const payload = { users: {} };
+  payload.users[nick] = { _dBal: delta };
+  api('/api/sync', { method: 'PUT', body: payload })
+    .then(res => {
+      applyServer(res);
+      toast(t('cust_bal_updated'), 'ok');
+      closeGenericModal();
+      renderAUsers();
+      renderDrawer();
+    })
+    .catch(e => { toast(srvErr(e) || t('cust_invalid_bal'), 'err'); });
 }
 
 /* ============================================================
@@ -3039,11 +3416,33 @@ function renderABots(){
   const users = Object.values(state.users).filter(u=>!u.isAdmin);
   const box = document.getElementById('abots-box');
   const rows = [];
-  users.forEach(u => (u.bots||[]).forEach(b => rows.push({ nick:u.nick, bot:b })));
+  users.forEach(u => (u.bots||[]).forEach((b, idx) => rows.push({ nick:u.nick, bot:b, idx })));
   if (!rows.length){ box.innerHTML = '<div class="empty"><div class="ic">🤖</div><p>'+t('p_admin_nobots')+'</p></div>'; return; }
-  box.innerHTML = '<table><thead><tr><th>'+t('p_admin_user')+'</th><th>🤖 '+t('mb_name')+'</th><th>'+t('bd_files')+'</th><th>'+t('bd_startup')+'</th><th>'+t('p_admin_status')+'</th></tr></thead><tbody>' +
-    rows.map(r=>'<tr><td><b>'+esc(r.nick)+'</b></td><td>'+esc(r.bot.name)+'</td><td>'+(r.bot.files||[]).length+'</td><td>'+(r.bot.mainFile?esc(r.bot.mainFile):'<span style="color:var(--muted2)">—</span>')+'</td><td>'+botStatusPill(r.bot.status)+'</td></tr>').join('')
-    + '</tbody></table>';
+  box.innerHTML = '<div class="table-wrap"><table><thead><tr><th>'+t('p_admin_user')+'</th><th>🤖 '+t('mb_name')+'</th><th>'+t('bot_tariff')+'</th><th>'+t('p_admin_status')+'</th><th>'+t('bot_expires')+'</th><th></th></tr></thead><tbody>' +
+    rows.map(r=>{
+      const st = r.bot.status;
+      const actBtns = (st==='active')
+        ? '<button class="mini-btn" onclick="adminBotStatus(\''+esc(r.nick)+'\','+r.idx+',\'stopped\')">'+t('a_stop_bot')+'</button>'
+        : '<button class="mini-btn" style="background:var(--success);color:#fff" onclick="adminBotStatus(\''+esc(r.nick)+'\','+r.idx+',\'active\')">'+t('a_approve_bot')+'</button>';
+      return '<tr><td><b>'+esc(r.nick)+'</b></td><td>'+esc(r.bot.name)+'</td><td>'+(r.bot.tariffName?esc(r.bot.tariffName):'<span style="color:var(--muted2)">'+t('bot_no_tariff')+'</span>')+'</td><td>'+botStatusPill(st)+'</td><td>'+(r.bot.expiresAt?fmtTime(r.bot.expiresAt):'—')+'</td><td class="row-actions">'+actBtns+'</td></tr>';
+    }).join('')
+    + '</tbody></table></div>';
+}
+function adminBotStatus(nick, idx, status){
+  // admin sets a customer's bot status via /api/sync (admin merge allows bot status updates)
+  const payload = { users: {} };
+  payload.users[nick] = { bots: [] };
+  // we must send the bot with the new status matched by id; build a minimal stub
+  const u = state.users[nick];
+  if (!u || !u.bots[idx]) return;
+  payload.users[nick].bots = [{ id: u.bots[idx].id, status: status }];
+  api('/api/sync', { method: 'PUT', body: payload })
+    .then(res => {
+      applyServer(res);
+      toast(status==='active' ? t('a_bot_approved') : t('msg_bot_stopped'), 'ok');
+      renderABots(); renderDrawer();
+    })
+    .catch(e => { toast(srvErr(e), 'err'); });
 }
 
 /* ============================================================
