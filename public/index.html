@@ -1521,6 +1521,8 @@ const I18N = {
     err_passmatch:"Parollar mos kelmadi", err_nicktaken:"Bu nick band", err_emailtaken:"Bu email band",
     err_empty:"Nick va parol kiriting", err_wrong:"Nick yoki parol noto'g'ri",
     err_botname:"Bot nomini kiriting (min 2 belgi)",
+    err_notfound:"So‘rov topilmadi (notfound). Server yangilanmagan bo‘lishi mumkin — administrator bilan bog‘laning yoki serverni qayta ishga tushiring.",
+    err_invalid:"Bu amalga ruxsat berilmagan.",
     welcome:"Salom", clientid:"Mijoz ID",
     quick_actions:"Tezkor amallar", recent_activity:"So'nggi faollik", active_bots:"Faol botlar",
     announcements:"E'lonlar", spending_chart:"Sarflash (so'm)",
@@ -1694,6 +1696,8 @@ const I18N = {
     err_passmatch:"Пароли не совпадают", err_nicktaken:"Этот ник занят", err_emailtaken:"Этот email занят",
     err_empty:"Введите ник и пароль", err_wrong:"Неверный ник или пароль",
     err_botname:"Введите имя бота (мин 2 символа)",
+    err_notfound:"Запрос не найден (notfound). Возможно, сервер не обновлён — обратитесь к администратору или перезапустите сервер.",
+    err_invalid:"Это действие недоступно.",
     welcome:"Привет", clientid:"ID клиента",
     quick_actions:"Быстрые действия", recent_activity:"Недавняя активность", active_bots:"Активные боты",
     announcements:"Объявления", spending_chart:"Расходы (сум)",
@@ -1858,6 +1862,8 @@ const I18N = {
     err_passmatch:"Passwords do not match", err_nicktaken:"This nick is taken", err_emailtaken:"This email is taken",
     err_empty:"Enter nick and password", err_wrong:"Wrong nick or password",
     err_botname:"Enter bot name (min 2 characters)",
+    err_notfound:"Request not found (notfound). The server may be outdated — contact the administrator or restart the server.",
+    err_invalid:"This action is not allowed.",
     welcome:"Hello", clientid:"Client ID",
     quick_actions:"Quick actions", recent_activity:"Recent activity", active_bots:"Active bots",
     announcements:"Announcements", spending_chart:"Spending (sum)",
@@ -2051,7 +2057,7 @@ async function api(path, opts){
 }
 function srvErr(e){
   const m = { nicktaken:'err_nicktaken', emailtaken:'err_emailtaken', wrong:'err_wrong', badnick:'err_nickshort', bademail:'err_email', badpass:'err_passshort', toomany:'err_wrong',
-    badbotname:'err_botname', badtariff:'mb_no_tariffs', insufficient:'mb_insufficient', toomanybots:'mb_1t1b_note', toolarge:'msg_file_too_big' };
+    badbotname:'err_botname', badtariff:'mb_no_tariffs', insufficient:'mb_insufficient', toomanybots:'mb_1t1b_note', toolarge:'msg_file_too_big', notfound:'err_notfound', invalid:'err_invalid' };
   if (m[e.code]) return t(m[e.code]);
   if (e.code === 'network') return 'Server bilan aloqa yo‘q. Qayta urinib ko‘ring.';
   return 'Server xatosi: ' + (e.code || '');
