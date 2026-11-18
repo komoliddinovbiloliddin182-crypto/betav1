@@ -425,6 +425,42 @@
       font-size: .68rem; font-weight: 700; padding: 2px 7px; border-radius: 999px;
     }
     .drawer-item .badge-count.amber { background: var(--warning); }
+    .drawer-item.tg-item {
+      background: linear-gradient(135deg, rgba(34,211,238,.08), rgba(59,130,246,.08));
+      border: 1px solid rgba(34,211,238,.25); color: var(--text);
+    }
+    .drawer-item.tg-item:hover {
+      background: linear-gradient(135deg, rgba(34,211,238,.18), rgba(59,130,246,.18));
+      border-color: rgba(34,211,238,.5); color: var(--text);
+    }
+    .drawer-item.tg-item .ic { color: var(--cyan); }
+    .drawer-item.tg-item .ext-arrow { margin-left: auto; color: var(--muted); font-size: .85rem; }
+
+    /* ===== Telegram bot banner (dashboard) ===== */
+    .tg-banner {
+      display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+      padding: 18px 22px; border-radius: var(--radius);
+      background: linear-gradient(135deg, rgba(34,211,238,.10), rgba(59,130,246,.08));
+      border: 1px solid rgba(34,211,238,.30);
+      margin-bottom: 18px;
+    }
+    .tg-banner .tg-ic {
+      flex: 0 0 auto; width: 52px; height: 52px; border-radius: 14px;
+      display: flex; align-items: center; justify-content: center; font-size: 1.8rem;
+      background: linear-gradient(135deg, #22d3ee, #3b82f6);
+      box-shadow: 0 6px 18px rgba(34,211,238,.35);
+    }
+    .tg-banner .tg-body { flex: 1 1 240px; min-width: 200px; }
+    .tg-banner .tg-title { font-weight: 700; font-size: 1.02rem; margin-bottom: 3px; color: var(--text); }
+    .tg-banner .tg-sub { color: var(--muted); font-size: .88rem; line-height: 1.5; }
+    .tg-banner .tg-btn {
+      flex: 0 0 auto; display: inline-flex; align-items: center; gap: 8px;
+      padding: 11px 22px; border-radius: 12px; font-weight: 700; font-size: .92rem;
+      background: linear-gradient(135deg, #22d3ee, #3b82f6); color: #fff;
+      text-decoration: none; transition: all .18s ease; box-shadow: 0 6px 18px rgba(34,211,238,.4);
+    }
+    .tg-banner .tg-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 26px rgba(34,211,238,.55); }
+    .tg-banner .tg-btn:active { transform: translateY(1px) scale(.99); }
     .drawer-foot { padding: 16px 14px; border-top: 1px solid var(--border); }
     .drawer-foot .lang-switch { width: 100%; justify-content: center; margin-bottom: 12px; }
 
@@ -1008,6 +1044,14 @@
           <p><span data-i18n="clientid"></span>: <code class="clid" id="welcome-id">—</code></p>
         </div>
       </div>
+      <div class="tg-banner">
+        <div class="tg-ic">✈️</div>
+        <div class="tg-body">
+          <div class="tg-title" id="tg-banner-title"></div>
+          <div class="tg-sub" id="tg-banner-sub"></div>
+        </div>
+        <a class="tg-btn" href="https://cortenbot.onrender.com/" target="_blank" rel="noopener noreferrer" id="tg-banner-btn"></a>
+      </div>
       <div class="stat-row" id="dash-stats"></div>
       <div class="quick-row" id="dash-quick"></div>
       <div class="dash-grid">
@@ -1494,7 +1538,7 @@ const I18N = {
     hero_badge:"Telegram botlaringiz uchun cloud hosting",
     hero_title_a:"Botlaringizni ", hero_title_b:"cloudga", hero_title_c:" tez va oson joylashtiring",
     hero_desc:"O'zingizning botlaringizni yarating, fayllarni yuklang, console'dan boshqaring. Admin tasdiqlashisiz bot oching.
-      agar botingiz bolmasa shu saytga tashrif buyuring https://shablon.onrender.com/",
+      Agar Telegram botingiz yo'q bo'lsa, shu tugmani bosing: https://cortenbot.onrender.com/",
     hero_cta1:"Boshlash — bepul ro'yxat", hero_cta2:"Hisobim bor",
     hstat_uptime:"Ishlash vaqti", hstat_deploy:"Joylash tezligi", hstat_langs:"Til", hstat_support:"Qo'llab-quvvatlash",
     feat_title:"Nega CortenCloud?", feat_sub:"Hammasi bir joyda — bot yaratish, to'lov, boshqaruv",
@@ -1533,7 +1577,10 @@ const I18N = {
     menu_dash:"Bosh sahifa", menu_profile:"Profil", menu_balance:"Balans", menu_mybots:"Mening botlarim",
     menu_promo:"Promokodlar", menu_tx:"Operatsiyalar", menu_activity:"Faollik",
     menu_notif:"Bildirishnomalar", menu_settings:"Sozlamalar", menu_contact:"Admin bilan muloqot",
-    menu_tariffs:"Tariflar",
+    menu_tariffs:"Tariflar", menu_tgbot:"Telegram bot",
+    tg_banner_title:"Telegram botingiz yo'qmi?",
+    tg_banner_sub:"Botlaringizni Telegram orqali boshqaring. Shu tugmani bosing va CortenCloud Telegram botiga ulaning — u sizga yangi bot yaratish, balansni tekshirish va tezkor yordam olishda yordam beradi.",
+    tg_banner_btn:"Telegram botni ochish ↗",
     p_tariffs_t:"Tariflar", p_tariffs_sub:"Admin tomonidan belgilangan tariflar",
     p_tariffs_empty:"Hozircha tariflar mavjud emas. Admin tez orada qo'shadi.",
     p_tariffs_land_empty:"Hozircha tariflar yo'q. Admin panel orqali tarif qo'shing.",
@@ -1708,7 +1755,10 @@ const I18N = {
     menu_dash:"Главная", menu_profile:"Профиль", menu_balance:"Баланс", menu_mybots:"Мои боты",
     menu_promo:"Промокоды", menu_tx:"Операции", menu_activity:"Активность",
     menu_notif:"Уведомления", menu_settings:"Настройки", menu_contact:"Чат с админом",
-    menu_tariffs:"Тарифы",
+    menu_tariffs:"Тарифы", menu_tgbot:"Telegram бот",
+    tg_banner_title:"У вас нет Telegram-бота?",
+    tg_banner_sub:"Управляйте своими ботами через Telegram. Нажмите эту кнопку, чтобы подключиться к боту CortenCloud — он поможет создать нового бота, проверить баланс и быстро получить поддержку.",
+    tg_banner_btn:"Открыть Telegram-бот ↗",
     p_tariffs_t:"Тарифы", p_tariffs_sub:"Тарифы, заданные администратором",
     p_tariffs_empty:"Тарифов пока нет. Админ скоро добавит.",
     p_tariffs_land_empty:"Тарифов пока нет. Добавьте через админ-панель.",
@@ -1874,7 +1924,10 @@ const I18N = {
     menu_dash:"Dashboard", menu_profile:"Profile", menu_balance:"Balance", menu_mybots:"My bots",
     menu_promo:"Promo codes", menu_tx:"Transactions", menu_activity:"Activity",
     menu_notif:"Notifications", menu_settings:"Settings", menu_contact:"Chat with admin",
-    menu_tariffs:"Tariffs",
+    menu_tariffs:"Tariffs", menu_tgbot:"Telegram bot",
+    tg_banner_title:"Don't have a Telegram bot yet?",
+    tg_banner_sub:"Manage your bots through Telegram. Click this button to connect to the CortenCloud Telegram bot — it helps you create a new bot, check your balance and get quick support.",
+    tg_banner_btn:"Open Telegram bot ↗",
     p_tariffs_t:"Tariffs", p_tariffs_sub:"Tariffs set by the administrator",
     p_tariffs_empty:"No tariffs yet. Admin will add them soon.",
     p_tariffs_land_empty:"No tariffs yet. Add one via the admin panel.",
@@ -2409,7 +2462,8 @@ const CUST_MENU = [
   { ic:'📊', key:'menu_activity', p:'activity' },
   { ic:'🔔', key:'menu_notif', p:'notif' },
   { ic:'💬', key:'menu_contact', p:'contact' },
-  { ic:'⚙', key:'menu_settings', p:'settings' }
+  { ic:'⚙', key:'menu_settings', p:'settings' },
+  { ic:'✈️', key:'menu_tgbot', p:'tgbot', ext:true, url:'https://cortenbot.onrender.com/' }
 ];
 const ADMIN_MENU = [
   { ic:'🛠', key:'amenu_adash', p:'adash' },
@@ -2463,7 +2517,12 @@ function renderDrawer(){
       if (i.p === 'notif'){ const n = state.notifs.filter(n => !u.readNotifs.includes(n.id)).length; if(n>0) badge='<span class="badge-count">'+n+'</span>'; }
       else if (i.p === 'contact'){ const n = (u.messages||[]).filter(m=>m.from==='admin' && !m.read).length; if(n>0) badge='<span class="badge-count">'+n+'</span>'; }
     }
-    html += '<div class="drawer-item'+active+'" onclick="showPage(\''+i.p+'\')"><span class="ic">'+i.ic+'</span><span>'+t(i.key)+'</span>'+badge+'</div>';
+    if (i.ext && i.url){
+      const tgCls = i.p === 'tgbot' ? ' tg-item' : '';
+      html += '<a class="drawer-item'+tgCls+'" href="'+esc(i.url)+'" target="_blank" rel="noopener noreferrer"><span class="ic">'+i.ic+'</span><span>'+t(i.key)+'</span><span class="ext-arrow">↗</span></a>';
+    } else {
+      html += '<div class="drawer-item'+active+'" onclick="showPage(\''+i.p+'\')"><span class="ic">'+i.ic+'</span><span>'+t(i.key)+'</span>'+badge+'</div>';
+    }
   });
   nav.innerHTML = html;
 }
@@ -2510,6 +2569,9 @@ function renderDash(){
   const u = user();
   document.getElementById('welcome-text').textContent = t('welcome') + ', ' + u.nick + '! 👋';
   document.getElementById('welcome-id').textContent = u.clientId;
+  document.getElementById('tg-banner-title').textContent = t('tg_banner_title');
+  document.getElementById('tg-banner-sub').textContent = t('tg_banner_sub');
+  document.getElementById('tg-banner-btn').textContent = t('tg_banner_btn');
   const active = u.bots.filter(b => b.status==='on' || b.status==='starting').length;
   const pendingT = (u.topupRequests||[]).filter(r=>r.status==='pending').length;
   const spent = u.transactions.filter(x => x.type==='out').reduce((s,x)=>s+x.amount,0);
