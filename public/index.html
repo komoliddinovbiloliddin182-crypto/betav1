@@ -87,6 +87,8 @@
     .btn-success:hover { transform: translateY(-2px); }
     .btn-danger { background: linear-gradient(135deg,#ef4444,#dc2626); color:#fff; box-shadow:0 6px 18px rgba(239,68,68,.3); }
     .btn-danger:hover { transform: translateY(-2px); }
+    .btn-bot { background: linear-gradient(135deg,#8b5cf6,#6366f1); color:#fff; box-shadow:0 6px 18px rgba(139,92,246,.45); position:relative; }
+    .btn-bot:hover { transform: translateY(-2px); box-shadow:0 10px 28px rgba(139,92,246,.6); }
     .btn-sm { padding: 8px 14px; font-size: .82rem; border-radius: 9px; }
     .btn-block { width: 100%; }
 
@@ -425,42 +427,6 @@
       font-size: .68rem; font-weight: 700; padding: 2px 7px; border-radius: 999px;
     }
     .drawer-item .badge-count.amber { background: var(--warning); }
-    .drawer-item.tg-item {
-      background: linear-gradient(135deg, rgba(34,211,238,.08), rgba(59,130,246,.08));
-      border: 1px solid rgba(34,211,238,.25); color: var(--text);
-    }
-    .drawer-item.tg-item:hover {
-      background: linear-gradient(135deg, rgba(34,211,238,.18), rgba(59,130,246,.18));
-      border-color: rgba(34,211,238,.5); color: var(--text);
-    }
-    .drawer-item.tg-item .ic { color: var(--cyan); }
-    .drawer-item.tg-item .ext-arrow { margin-left: auto; color: var(--muted); font-size: .85rem; }
-
-    /* ===== Telegram bot banner (dashboard) ===== */
-    .tg-banner {
-      display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
-      padding: 18px 22px; border-radius: var(--radius);
-      background: linear-gradient(135deg, rgba(34,211,238,.10), rgba(59,130,246,.08));
-      border: 1px solid rgba(34,211,238,.30);
-      margin-bottom: 18px;
-    }
-    .tg-banner .tg-ic {
-      flex: 0 0 auto; width: 52px; height: 52px; border-radius: 14px;
-      display: flex; align-items: center; justify-content: center; font-size: 1.8rem;
-      background: linear-gradient(135deg, #22d3ee, #3b82f6);
-      box-shadow: 0 6px 18px rgba(34,211,238,.35);
-    }
-    .tg-banner .tg-body { flex: 1 1 240px; min-width: 200px; }
-    .tg-banner .tg-title { font-weight: 700; font-size: 1.02rem; margin-bottom: 3px; color: var(--text); }
-    .tg-banner .tg-sub { color: var(--muted); font-size: .88rem; line-height: 1.5; }
-    .tg-banner .tg-btn {
-      flex: 0 0 auto; display: inline-flex; align-items: center; gap: 8px;
-      padding: 11px 22px; border-radius: 12px; font-weight: 700; font-size: .92rem;
-      background: linear-gradient(135deg, #22d3ee, #3b82f6); color: #fff;
-      text-decoration: none; transition: all .18s ease; box-shadow: 0 6px 18px rgba(34,211,238,.4);
-    }
-    .tg-banner .tg-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 26px rgba(34,211,238,.55); }
-    .tg-banner .tg-btn:active { transform: translateY(1px) scale(.99); }
     .drawer-foot { padding: 16px 14px; border-top: 1px solid var(--border); }
     .drawer-foot .lang-switch { width: 100%; justify-content: center; margin-bottom: 12px; }
 
@@ -890,6 +856,10 @@
       <button class="btn btn-primary" data-i18n="hero_cta1" onclick="openModal('register')"></button>
       <button class="btn btn-outline" data-i18n="hero_cta2" onclick="openModal('login')"></button>
     </div>
+    <div class="hero-botcta" style="margin-top:22px;display:flex;flex-direction:column;align-items:center;gap:10px">
+      <span data-i18n="hero_bot_q" style="color:var(--muted2);font-size:.95rem"></span>
+      <a class="btn btn-bot" data-i18n="hero_cta_bot" href="https://cortenbot.onrender.com/" target="_blank" rel="noopener noreferrer" style="text-decoration:none;padding:14px 28px;font-size:1rem"></a>
+    </div>
     <div class="hero-stats">
       <div class="hero-stat"><div class="n"><span class="grad">99.9%</span></div><div class="l" data-i18n="hstat_uptime"></div></div>
       <div class="hero-stat"><div class="n"><span class="grad">24h</span></div><div class="l" data-i18n="hstat_deploy"></div></div>
@@ -1044,14 +1014,6 @@
           <p><span data-i18n="clientid"></span>: <code class="clid" id="welcome-id">—</code></p>
         </div>
       </div>
-      <div class="tg-banner">
-        <div class="tg-ic">✈️</div>
-        <div class="tg-body">
-          <div class="tg-title" id="tg-banner-title"></div>
-          <div class="tg-sub" id="tg-banner-sub"></div>
-        </div>
-        <a class="tg-btn" href="https://cortenbot.onrender.com/" target="_blank" rel="noopener noreferrer" id="tg-banner-btn"></a>
-      </div>
       <div class="stat-row" id="dash-stats"></div>
       <div class="quick-row" id="dash-quick"></div>
       <div class="dash-grid">
@@ -1134,6 +1096,33 @@
       </div>
       <div class="card">
         <div class="bot-grid" id="bots-grid"></div>
+      </div>
+    </div>
+
+    <!-- CORTENBOTS: template-based Telegram bot creation -->
+    <div id="page-cbots" class="page">
+      <button class="back" onclick="showPage('dash')"><span class="arrow">←</span> <span data-i18n="back"></span></button>
+      <div class="welcome">
+        <div>
+          <h1 data-i18n="cb_title"></h1>
+          <p data-i18n="cb_sub"></p>
+        </div>
+        <div id="cb-trial-note" class="alert alert-info" style="max-width:360px;white-space:normal"></div>
+      </div>
+      <div class="card">
+        <div class="section-head"><h2 data-i18n="cb_pick_template"></h2></div>
+        <div id="cb-templates" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px"></div>
+        <div class="form-group" style="max-width:520px;margin-top:16px">
+          <label data-i18n="cb_enter_token"></label>
+          <input class="form-control" id="cb-token" type="password" placeholder="123456789:AA..." autocomplete="off">
+          <p class="hint" data-i18n="cb_token_hint"></p>
+        </div>
+        <button class="btn btn-primary" onclick="cbLaunch(this)" data-i18n="cb_launch"></button>
+        <div id="cb-msg" class="flash" style="margin-top:10px;display:none"></div>
+      </div>
+      <div class="card" style="margin-top:16px">
+        <div class="section-head"><h2 data-i18n="cb_mybots"></h2></div>
+        <div id="cb-bots"></div>
       </div>
     </div>
 
@@ -1479,6 +1468,27 @@
       </div>
     </div>
 
+    <!-- ADMIN: BOT TEMPLATES (cortenbots) -->
+    <div id="page-acbtpl" class="page">
+      <button class="back" onclick="showPage('adash')"><span class="arrow">←</span> <span data-i18n="back"></span></button>
+      <div class="card admin-card">
+        <h2>🤖 <span data-i18n="acbtpl_title"></span></h2>
+        <p class="hint" style="margin-bottom:14px" data-i18n="acbtpl_refund_note"></p>
+        <div class="sub-h">➕ <span data-i18n="acbtpl_new"></span></div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;max-width:760px;margin-bottom:10px">
+          <div class="form-group"><label data-i18n="acbtpl_name"></label><input class="form-control" id="acbtpl-name" placeholder="Kafe boti"></div>
+          <div class="form-group"><label data-i18n="acbtpl_icon"></label><input class="form-control" id="acbtpl-icon" placeholder="☕" maxlength="4"></div>
+          <div class="form-group"><label data-i18n="acbtpl_price"></label><input class="form-control" type="number" id="acbtpl-price" placeholder="39000" min="0"></div>
+          <div class="form-group"><label data-i18n="acbtpl_days"></label><input class="form-control" type="number" id="acbtpl-days" placeholder="30" min="1" value="30"></div>
+        </div>
+        <div class="form-group" style="max-width:520px"><label data-i18n="acbtpl_desc"></label><input class="form-control" id="acbtpl-desc" placeholder="Menyu, buyurtma, yetkazib berish"></div>
+        <button class="btn btn-admin" style="width:auto" data-i18n="acbtpl_add" onclick="adminAddBotTemplate()"></button>
+        <div id="acbtpl-msg"></div>
+        <div class="sub-h" style="margin-top:14px">📋 <span data-i18n="a_tariff_list"></span></div>
+        <div id="acbtpl-list"></div>
+      </div>
+    </div>
+
     <!-- ADMIN SETTINGS -->
     <div id="page-asettings" class="page">
       <button class="back" onclick="showPage('adash')"><span class="arrow">←</span> <span data-i18n="back"></span></button>
@@ -1537,9 +1547,9 @@ const I18N = {
     nav_login:"Kirish", nav_signup:"Ro'yxat", nav_logout:"Chiqish",
     hero_badge:"Telegram botlaringiz uchun cloud hosting",
     hero_title_a:"Botlaringizni ", hero_title_b:"cloudga", hero_title_c:" tez va oson joylashtiring",
-    hero_desc:"O'zingizning botlaringizni yarating, fayllarni yuklang, console'dan boshqaring. Admin tasdiqlashisiz bot oching.
-      Agar Telegram botingiz yo'q bo'lsa, shu tugmani bosing: https://cortenbot.onrender.com/",
+    hero_desc:"O'zingizning botlaringizni yarating, fayllarni yuklang, console'dan boshqaring. Admin tasdiqlashisiz bot oching.",
     hero_cta1:"Boshlash — bepul ro'yxat", hero_cta2:"Hisobim bor",
+    hero_bot_q:"Botingiz yo'qmi?", hero_cta_bot:"Botingizni yarating →",
     hstat_uptime:"Ishlash vaqti", hstat_deploy:"Joylash tezligi", hstat_langs:"Til", hstat_support:"Qo'llab-quvvatlash",
     feat_title:"Nega CortenCloud?", feat_sub:"Hammasi bir joyda — bot yaratish, to'lov, boshqaruv",
     feat_fast_t:"Tez bot yaratish", feat_fast_d:"Botni admin tasdiqlashisiz darhol yaratib, ichiga kiring. Fayl, console, logs — hammasi ishlaydi.",
@@ -1577,10 +1587,7 @@ const I18N = {
     menu_dash:"Bosh sahifa", menu_profile:"Profil", menu_balance:"Balans", menu_mybots:"Mening botlarim",
     menu_promo:"Promokodlar", menu_tx:"Operatsiyalar", menu_activity:"Faollik",
     menu_notif:"Bildirishnomalar", menu_settings:"Sozlamalar", menu_contact:"Admin bilan muloqot",
-    menu_tariffs:"Tariflar", menu_tgbot:"Telegram bot",
-    tg_banner_title:"Telegram botingiz yo'qmi?",
-    tg_banner_sub:"Botlaringizni Telegram orqali boshqaring. Shu tugmani bosing va CortenCloud Telegram botiga ulaning — u sizga yangi bot yaratish, balansni tekshirish va tezkor yordam olishda yordam beradi.",
-    tg_banner_btn:"Telegram botni ochish ↗",
+    menu_tariffs:"Tariflar",
     p_tariffs_t:"Tariflar", p_tariffs_sub:"Admin tomonidan belgilangan tariflar",
     p_tariffs_empty:"Hozircha tariflar mavjud emas. Admin tez orada qo'shadi.",
     p_tariffs_land_empty:"Hozircha tariflar yo'q. Admin panel orqali tarif qo'shing.",
@@ -1710,7 +1717,26 @@ const I18N = {
     /* ===== tariff extras ===== */
     a_tariff_days:"Muddat (kun)", a_tariff_active:"Faol", a_tariff_inactive:"O'chirilgan",
     a_tariff_toggle_on:"Yoqish", a_tariff_toggle_off:"O'chirish", p_tariffs_days:"kunlik",
-    tx_bot_create:"Bot yaratish: {name} ({tariff})"
+    tx_bot_create:"Bot yaratish: {name} ({tariff})",
+    /* ===== cortenbots: template-based bot creation ===== */
+    menu_cbots:"Bot yarating", amenu_acbtpl:"Bot shablonlari",
+    cb_title:"CortenBots — Telegram bot yarating", cb_sub:"Shablonni tanlang, BotFather tokenini ulang — bot darhol ishga tushadi. Birinchi botingiz 3 kun bepul.",
+    cb_pick_template:"Shablonni tanlang", cb_enter_token:"TELEGRAM BOT TOKENI",
+    cb_token_hint:"Tokenni @BotFather orqali /newbot buyrug'i bilan oling. Token maxfiy — hech kimga yubormang.",
+    cb_launch:"🚀 Botni ishga tushirish", cb_mybots:"📡 Mening botlarim", cb_no_bots:"Hozircha botingiz yo'q. Yuqorida birinchi botingizni yarating ✨",
+    cb_trial_badge:"3 kun bepul", cb_trial_note:"🎁 Birinchi botingiz 3 kun bepul sinov — karta talab qilinmaydi.",
+    cb_trial_used:"Siz bepul sinovdan foydalanib bo'lgansiz. Keyingi botlar to'lovli.",
+    cb_on:"Yoqish", cb_off:"O'chirish", cb_status_on:"● Faol", cb_status_off:"● O'chiq", cb_status_expired:"● Tugagan",
+    cb_delete:"O'chirish", cb_confirm_delete:"Botni o'chirmoqchimisiz? Bu amalni qaytarib bo'lmaydi.",
+    cb_created:"🎉 Bot @{u} muvaffaqiyatli yaratildi! Telegramda /start yuboring.",
+    cb_badtoken:"Token noto'g'ri yoki Telegram bilan aloqa yo'q.", cb_nousername:"Bot username aniqlanmadi.",
+    cb_badtemplate:"Shablon tanlanmagan.", cb_duptoken:"Bu token avval ishlatilgan.", cb_insufficient:"Balans yetarli emas.",
+    cb_expired:"Muddat tugagan. Yangi tarif sotib oling.", cb_days_left:"{n} kun qoldi", cb_price:"{p} so'm / {d} kun",
+    acbtpl_title:"Bot shablonlari va narxlar", acbtpl_new:"Yangi shablon qo'shish",
+    acbtpl_name:"Nomi", acbtpl_icon:"Icon (emoji)", acbtpl_desc:"Tavsif", acbtpl_price:"Narx (so'm)", acbtpl_days:"Davr (kun)",
+    acbtpl_active:"Faol", acbtpl_add:"Qo'shish", acbtpl_update:"Saqlash", acbtpl_empty:"Shablonlar yo'q. Yangi qo'shing.",
+    acbtpl_saved:"Shablonlar saqlandi.", acbtpl_refund_note:"⚠ Narxni o'zgartirsangiz, shu shablonning aktiv botlari bo'lgan mijozlarga qoldiq muddat proportsional qaytariladi.",
+    tx_cb_create:"CortenBot yaratish: {name} ({tariff})", tx_cb_refund:"Narx o'zgarishi: {name} — qoldiq qaytarildi"
   },
   ru: {
     nav_login:"Войти", nav_signup:"Регистрация", nav_logout:"Выйти",
@@ -1718,6 +1744,7 @@ const I18N = {
     hero_title_a:"Разверните ботов в ", hero_title_b:"облаке", hero_title_c:" быстро и просто",
     hero_desc:"Создавайте своих ботов, загружайте файлы, управляйте через консоль. Без подтверждения админом.",
     hero_cta1:"Начать — бесплатная регистрация", hero_cta2:"У меня есть аккаунт",
+    hero_bot_q:"Нет своего бота?", hero_cta_bot:"Создать бота →",
     hstat_uptime:"Аптайм", hstat_deploy:"Скорость", hstat_langs:"Язык", hstat_support:"Поддержка",
     feat_title:"Почему CortenCloud?", feat_sub:"Всё в одном — создание ботов, оплата, управление",
     feat_fast_t:"Быстрое создание бота", feat_fast_d:"Создайте бота без подтверждения админом и войдите. Файл, консоль, логи — всё работает.",
@@ -1755,10 +1782,7 @@ const I18N = {
     menu_dash:"Главная", menu_profile:"Профиль", menu_balance:"Баланс", menu_mybots:"Мои боты",
     menu_promo:"Промокоды", menu_tx:"Операции", menu_activity:"Активность",
     menu_notif:"Уведомления", menu_settings:"Настройки", menu_contact:"Чат с админом",
-    menu_tariffs:"Тарифы", menu_tgbot:"Telegram бот",
-    tg_banner_title:"У вас нет Telegram-бота?",
-    tg_banner_sub:"Управляйте своими ботами через Telegram. Нажмите эту кнопку, чтобы подключиться к боту CortenCloud — он поможет создать нового бота, проверить баланс и быстро получить поддержку.",
-    tg_banner_btn:"Открыть Telegram-бот ↗",
+    menu_tariffs:"Тарифы",
     p_tariffs_t:"Тарифы", p_tariffs_sub:"Тарифы, заданные администратором",
     p_tariffs_empty:"Тарифов пока нет. Админ скоро добавит.",
     p_tariffs_land_empty:"Тарифов пока нет. Добавьте через админ-панель.",
@@ -1879,7 +1903,25 @@ const I18N = {
     a_approve_bot:"Активировать", a_stop_bot:"Остановить", a_bot_approved:"Бот активирован",
     a_tariff_days:"Срок (дней)", a_tariff_active:"Активен", a_tariff_inactive:"Выключен",
     a_tariff_toggle_on:"Включить", a_tariff_toggle_off:"Выключить", p_tariffs_days:"дней",
-    tx_bot_create:"Создание бота: {name} ({tariff})"
+    tx_bot_create:"Создание бота: {name} ({tariff})",
+    menu_cbots:"Создать бота", amenu_acbtpl:"Шаблоны ботов",
+    cb_title:"CortenBots — создайте Telegram-бота", cb_sub:"Выберите шаблон, подключите токен BotFather — бот сразу запустится. Первый бот 3 дня бесплатно.",
+    cb_pick_template:"Выберите шаблон", cb_enter_token:"ТОКЕН TELEGRAM-БОТА",
+    cb_token_hint:"Получите токен через @BotFather командой /newbot. Токен секретен.",
+    cb_launch:"🚀 Запустить бота", cb_mybots:"📡 Мои боты", cb_no_bots:"У вас пока нет ботов. Создайте первый ✨",
+    cb_trial_badge:"3 дня бесплатно", cb_trial_note:"🎁 Первый бот — 3 дня бесплатной пробы, карта не нужна.",
+    cb_trial_used:"Вы уже использовали бесплатную пробу.", cb_on:"Включить", cb_off:"Выключить",
+    cb_status_on:"● Активен", cb_status_off:"● Выключен", cb_status_expired:"● Истёк",
+    cb_delete:"Удалить", cb_confirm_delete:"Удалить бота? Действие необратимо.",
+    cb_created:"🎉 Бот @{u} успешно создан! Отправьте /start в Telegram.",
+    cb_badtoken:"Токен неверен или нет связи с Telegram.", cb_nousername:"Имя бота не определено.",
+    cb_badtemplate:"Шаблон не выбран.", cb_duptoken:"Этот токен уже использован.", cb_insufficient:"Недостаточно средств.",
+    cb_expired:"Срок истёк. Купите новый тариф.", cb_days_left:"Осталось {n} дн.", cb_price:"{p} сум / {d} дн",
+    acbtpl_title:"Шаблоны и цены ботов", acbtpl_new:"Добавить шаблон", acbtpl_name:"Название", acbtpl_icon:"Иконка (emoji)",
+    acbtpl_desc:"Описание", acbtpl_price:"Цена (сум)", acbtpl_days:"Период (дн)", acbtpl_active:"Активен",
+    acbtpl_add:"Добавить", acbtpl_update:"Сохранить", acbtpl_empty:"Шаблонов нет. Добавьте новый.",
+    acbtpl_saved:"Шаблоны сохранены.", acbtpl_refund_note:"⚠ При изменении цены активным клиентам вернётся остаток пропорционально.",
+    tx_cb_create:"Создание CortenBot: {name} ({tariff})", tx_cb_refund:"Изменение цены: {name} — остаток возвращён"
   },
   en: {
     nav_login:"Log in", nav_signup:"Sign up", nav_logout:"Log out",
@@ -1887,6 +1929,7 @@ const I18N = {
     hero_title_a:"Deploy your bots to the ", hero_title_b:"cloud", hero_title_c:" fast and easy",
     hero_desc:"Create your own bots, upload files, control via console. No admin approval needed.",
     hero_cta1:"Get started — free sign up", hero_cta2:"I have an account",
+    hero_bot_q:"Don't have a bot yet?", hero_cta_bot:"Create your bot →",
     hstat_uptime:"Uptime", hstat_deploy:"Speed", hstat_langs:"Language", hstat_support:"Support",
     feat_title:"Why CortenCloud?", feat_sub:"All in one — bot creation, payment, management",
     feat_fast_t:"Fast bot creation", feat_fast_d:"Create a bot with no admin approval and enter it. File, console, logs — all work.",
@@ -1924,10 +1967,7 @@ const I18N = {
     menu_dash:"Dashboard", menu_profile:"Profile", menu_balance:"Balance", menu_mybots:"My bots",
     menu_promo:"Promo codes", menu_tx:"Transactions", menu_activity:"Activity",
     menu_notif:"Notifications", menu_settings:"Settings", menu_contact:"Chat with admin",
-    menu_tariffs:"Tariffs", menu_tgbot:"Telegram bot",
-    tg_banner_title:"Don't have a Telegram bot yet?",
-    tg_banner_sub:"Manage your bots through Telegram. Click this button to connect to the CortenCloud Telegram bot — it helps you create a new bot, check your balance and get quick support.",
-    tg_banner_btn:"Open Telegram bot ↗",
+    menu_tariffs:"Tariffs",
     p_tariffs_t:"Tariffs", p_tariffs_sub:"Tariffs set by the administrator",
     p_tariffs_empty:"No tariffs yet. Admin will add them soon.",
     p_tariffs_land_empty:"No tariffs yet. Add one via the admin panel.",
@@ -2048,7 +2088,25 @@ const I18N = {
     a_approve_bot:"Activate", a_stop_bot:"Stop", a_bot_approved:"Bot activated",
     a_tariff_days:"Duration (days)", a_tariff_active:"Active", a_tariff_inactive:"Disabled",
     a_tariff_toggle_on:"Enable", a_tariff_toggle_off:"Disable", p_tariffs_days:"days",
-    tx_bot_create:"Bot created: {name} ({tariff})"
+    tx_bot_create:"Bot created: {name} ({tariff})",
+    menu_cbots:"Create bot", amenu_acbtpl:"Bot templates",
+    cb_title:"CortenBots — build a Telegram bot", cb_sub:"Pick a template, connect a BotFather token — the bot starts instantly. First bot is 3 days free.",
+    cb_pick_template:"Pick a template", cb_enter_token:"TELEGRAM BOT TOKEN",
+    cb_token_hint:"Get the token from @BotFather via /newbot. Keep it secret.",
+    cb_launch:"🚀 Launch bot", cb_mybots:"📡 My bots", cb_no_bots:"No bots yet. Create your first one above ✨",
+    cb_trial_badge:"3 days free", cb_trial_note:"🎁 Your first bot — 3-day free trial, no card required.",
+    cb_trial_used:"You've already used the free trial.", cb_on:"Turn on", cb_off:"Turn off",
+    cb_status_on:"● Active", cb_status_off:"● Off", cb_status_expired:"● Expired",
+    cb_delete:"Delete", cb_confirm_delete:"Delete this bot? This cannot be undone.",
+    cb_created:"🎉 Bot @{u} created successfully! Send /start in Telegram.",
+    cb_badtoken:"Token invalid or no Telegram connection.", cb_nousername:"Bot username not found.",
+    cb_badtemplate:"No template selected.", cb_duptoken:"This token was already used.", cb_insufficient:"Insufficient balance.",
+    cb_expired:"Period expired. Buy a new plan.", cb_days_left:"{n} days left", cb_price:"{p} sum / {d} days",
+    acbtpl_title:"Bot templates & prices", acbtpl_new:"Add template", acbtpl_name:"Name", acbtpl_icon:"Icon (emoji)",
+    acbtpl_desc:"Description", acbtpl_price:"Price (sum)", acbtpl_days:"Period (days)", acbtpl_active:"Active",
+    acbtpl_add:"Add", acbtpl_update:"Save", acbtpl_empty:"No templates. Add a new one.",
+    acbtpl_saved:"Templates saved.", acbtpl_refund_note:"⚠ Changing the price refunds active customers proportionally for the unused time.",
+    tx_cb_create:"CortenBot created: {name} ({tariff})", tx_cb_refund:"Price change: {name} — unused refunded"
   }
 };
 
@@ -2088,7 +2146,7 @@ let state = { users:{}, current:null, token: _loc.token || null };
 function saveLocal(){ try { localStorage.setItem('cc_v6', JSON.stringify({ token: state.token })); } catch(e){} }
 
 const SYNC_MS = 3000;
-const SHARED_W = ['card','promos','tariffs','notifs','broadcasts','adminLogs'];
+const SHARED_W = ['card','promos','tariffs','botTemplates','notifs','broadcasts','adminLogs'];
 const SHARED_ALL = ['earned'].concat(SHARED_W);
 let rev = 0, dirty = false, dirtyGen = 0, pushing = false, pollBusy = false, pushTimer = null;
 let snapUsers = {}, snapShared = {}, snapFiles = {}, knownReq = {};
@@ -2112,7 +2170,8 @@ async function api(path, opts){
 }
 function srvErr(e){
   const m = { nicktaken:'err_nicktaken', emailtaken:'err_emailtaken', wrong:'err_wrong', badnick:'err_nickshort', bademail:'err_email', badpass:'err_passshort', toomany:'err_wrong',
-    badbotname:'err_botname', badtariff:'mb_no_tariffs', insufficient:'mb_insufficient', toomanybots:'mb_1t1b_note', toolarge:'msg_file_too_big', notfound:'err_notfound', invalid:'err_invalid' };
+    badbotname:'err_botname', badtariff:'mb_no_tariffs', insufficient:'mb_insufficient', toomanybots:'mb_1t1b_note', toolarge:'msg_file_too_big', notfound:'err_notfound', invalid:'err_invalid',
+    badtoken:'cb_badtoken', nousername:'cb_nousername', badtemplate:'cb_badtemplate', duptoken:'cb_duptoken', expired:'cb_expired' };
   if (m[e.code]) return t(m[e.code]);
   if (e.code === 'network') return 'Server bilan aloqa yo‘q. Qayta urinib ko‘ring.';
   return 'Server xatosi: ' + (e.code || '');
@@ -2254,6 +2313,8 @@ ensureAdmin();
 function user(){ return state.current && state.users ? state.users[state.current] : null; }
 function ensureUserFields(u){
   if (!u.bots) u.bots = [];
+  if (!u.cbBots) u.cbBots = [];
+  if (u.trialUsed !== true) u.trialUsed = false;
   if (!u.messages) u.messages = [];
   if (!u.transactions) u.transactions = [];
   if (!u.activity) u.activity = [];
@@ -2456,14 +2517,14 @@ const CUST_MENU = [
   { ic:'👤', key:'menu_profile', p:'profile' },
   { ic:'💰', key:'menu_balance', p:'balance' },
   { ic:'🤖', key:'menu_mybots', p:'mybots' },
+  { ic:'⚡', key:'menu_cbots', p:'cbots' },
   { ic:'📦', key:'menu_tariffs', p:'tariffs' },
   { ic:'🎟', key:'menu_promo', p:'promo' },
   { ic:'📋', key:'menu_tx', p:'tx' },
   { ic:'📊', key:'menu_activity', p:'activity' },
   { ic:'🔔', key:'menu_notif', p:'notif' },
   { ic:'💬', key:'menu_contact', p:'contact' },
-  { ic:'⚙', key:'menu_settings', p:'settings' },
-  { ic:'✈️', key:'menu_tgbot', p:'tgbot', ext:true, url:'https://cortenbot.onrender.com/' }
+  { ic:'⚙', key:'menu_settings', p:'settings' }
 ];
 const ADMIN_MENU = [
   { ic:'🛠', key:'amenu_adash', p:'adash' },
@@ -2474,6 +2535,7 @@ const ADMIN_MENU = [
   { ic:'⚖', key:'amenu_abalance', p:'abalance' },
   { ic:'🎟', key:'amenu_apromos', p:'apromos' },
   { ic:'📦', key:'amenu_atariffs', p:'atariffs' },
+  { ic:'🤖', key:'amenu_acbtpl', p:'acbtpl' },
   { ic:'📢', key:'amenu_abroadcast', p:'abroadcast' },
   { ic:'💬', key:'amenu_achat', p:'achat' },
   { ic:'📜', key:'amenu_alogs', p:'alogs' },
@@ -2517,27 +2579,158 @@ function renderDrawer(){
       if (i.p === 'notif'){ const n = state.notifs.filter(n => !u.readNotifs.includes(n.id)).length; if(n>0) badge='<span class="badge-count">'+n+'</span>'; }
       else if (i.p === 'contact'){ const n = (u.messages||[]).filter(m=>m.from==='admin' && !m.read).length; if(n>0) badge='<span class="badge-count">'+n+'</span>'; }
     }
-    if (i.ext && i.url){
-      const tgCls = i.p === 'tgbot' ? ' tg-item' : '';
-      html += '<a class="drawer-item'+tgCls+'" href="'+esc(i.url)+'" target="_blank" rel="noopener noreferrer"><span class="ic">'+i.ic+'</span><span>'+t(i.key)+'</span><span class="ext-arrow">↗</span></a>';
-    } else {
-      html += '<div class="drawer-item'+active+'" onclick="showPage(\''+i.p+'\')"><span class="ic">'+i.ic+'</span><span>'+t(i.key)+'</span>'+badge+'</div>';
-    }
+    html += '<div class="drawer-item'+active+'" onclick="showPage(\''+i.p+'\')"><span class="ic">'+i.ic+'</span><span>'+t(i.key)+'</span>'+badge+'</div>';
   });
   nav.innerHTML = html;
+}
+
+/* ============================================================
+   CORTENBOTS — template-based Telegram bot creation, toggle, admin templates
+   ============================================================ */
+let cbSelectedTemplate = null;
+function activeBotTemplates(){ return (state.botTemplates||[]).filter(x => x.active !== false); }
+function cbFmtPrice(tf){ return tf.price === 0 ? t('cb_trial_badge') : fmtMoney(tf.price)+' '+t('som')+' / '+tf.days+' '+t('p_tariffs_days'); }
+function renderCBots(){
+  const u = user();
+  const note = document.getElementById('cb-trial-note');
+  if (note){
+    note.innerHTML = u.trialUsed ? ('⚠ '+t('cb_trial_used')) : ('🎁 '+t('cb_trial_note'));
+    note.className = 'alert '+(u.trialUsed ? 'alert-warn' : 'alert-info');
+  }
+  const tgrid = document.getElementById('cb-templates');
+  const list = activeBotTemplates();
+  cbSelectedTemplate = null;
+  if (!list.length){ tgrid.innerHTML = '<div style="grid-column:1/-1" class="empty"><div class="ic">📦</div><p>'+t('acbtpl_empty')+'</p></div>'; }
+  else {
+    tgrid.innerHTML = list.map((tf,i)=>{
+      const cls = i===0 ? ' selected' : '';
+      if (i===0) cbSelectedTemplate = tf.id;
+      return '<div class="tariff-pick'+cls+'" data-tid="'+esc(tf.id)+'" onclick="cbSelectTemplate(\''+esc(tf.id)+'\')">'+
+        '<div><div class="tp-name">'+esc(tf.icon||'🤖')+' '+esc(tf.name)+(tf.price===0?' <span class="badge badge-in" style="font-size:.65rem">'+t('cb_trial_badge')+'</span>':'')+'</div>'+
+        '<div class="tp-meta">'+esc(tf.desc||'')+' · '+cbFmtPrice(tf)+'</div></div></div>';
+    }).join('');
+  }
+  const msg = document.getElementById('cb-msg'); if (msg) msg.style.display = 'none';
+  const tok = document.getElementById('cb-token'); if (tok) tok.value = '';
+  renderCBMyBots();
+}
+function cbSelectTemplate(id){
+  cbSelectedTemplate = id;
+  document.querySelectorAll('#cb-templates .tariff-pick').forEach(el=>{
+    el.classList.toggle('selected', el.dataset.tid === String(id));
+  });
+}
+function cbShowMsg(type, msg){ const el = document.getElementById('cb-msg'); el.className = 'flash flash-'+type; el.textContent = msg; el.style.display = 'block'; }
+function cbLaunch(btn){
+  const u = user();
+  if (!cbSelectedTemplate){ cbShowMsg('err', t('cb_badtemplate')); return; }
+  const token = (document.getElementById('cb-token').value || '').trim();
+  if (!/^\d+:[A-Za-z0-9_-]{20,}$/.test(token)){ cbShowMsg('err', t('cb_badtoken')); return; }
+  const orig = btn ? btn.textContent : '🚀'; if (btn){ btn.disabled = true; btn.textContent = '⏳...'; }
+  api('/api/cb-create', { method:'POST', body:{ name: 'CortenBot', templateId: cbSelectedTemplate, token } })
+    .then(res => { applyServer(res); cbShowMsg('ok', '✓ '+t('cb_created').replace('{u}', '')); const tk = document.getElementById('cb-token'); if (tk) tk.value=''; renderCBMyBots(); renderDrawer(); })
+    .catch(e => { cbShowMsg('err', '❌ '+srvErr(e)); })
+    .finally(()=>{ if (btn){ btn.disabled = false; btn.textContent = orig; } });
+}
+function renderCBMyBots(){
+  const u = user();
+  const box = document.getElementById('cb-bots'); if (!box) return;
+  const bots = u.cbBots || [];
+  if (!bots.length){ box.innerHTML = '<div class="empty"><div class="ic">🤖</div><p>'+t('cb_no_bots')+'</p></div>'; return; }
+  const now = Date.now();
+  box.innerHTML = bots.map(b=>{
+    let st = b.status || 'off';
+    if (b.expiresAt && Number(b.expiresAt) < now) st = 'expired';
+    const daysLeft = b.expiresAt ? Math.max(0, Math.ceil((Number(b.expiresAt)-now)/86400000)) : 0;
+    const stLbl = st==='on' ? t('cb_status_on') : (st==='off' ? t('cb_status_off') : t('cb_status_expired'));
+    const stCls = st==='on' ? 'badge-active' : (st==='expired' ? 'badge-off' : 'badge-pending');
+    const toggleBtn = st==='expired' ? '' : '<button class="mini-btn" onclick="cbToggle(\''+esc(b.id)+'\')">'+(st==='on'?t('cb_off'):t('cb_on'))+'</button>';
+    return '<div class="req-card" style="align-items:center">'+
+      '<div><div class="req-user">'+esc(b.templateIcon||'🤖')+' '+esc(b.name)+' <span class="muted">@'+esc(b.tgUsername||'')+'</span></div>'+
+      '<div class="req-amt">'+esc(b.templateName)+(b.isTrial?' · 🎁 '+t('cb_trial_badge'):'')+' · '+tf('cb_days_left',{n:daysLeft})+'</div></div>'+
+      '<div class="req-actions"><span class="badge '+stCls+'">'+stLbl+'</span>'+toggleBtn+
+      '<button class="mini-btn danger" onclick="cbDelete(\''+esc(b.id)+'\')">'+t('cb_delete')+'</button></div></div>';
+  }).join('');
+}
+function cbToggle(botId){
+  api('/api/cb-toggle', { method:'POST', body:{ botId } })
+    .then(res => { applyServer(res); renderCBMyBots(); renderDrawer(); })
+    .catch(e => { cbShowMsg('err', srvErr(e)); });
+}
+function cbDelete(botId){
+  if (!confirm(t('cb_confirm_delete'))) return;
+  api('/api/cb-delete', { method:'POST', body:{ botId } })
+    .then(res => { applyServer(res); renderCBMyBots(); renderDrawer(); })
+    .catch(e => { cbShowMsg('err', srvErr(e)); });
+}
+/* ---- admin: bot templates & prices ---- */
+function renderABotTemplates(){
+  const msg = document.getElementById('acbtpl-msg'); if (msg) msg.innerHTML = '';
+  ['acbtpl-name','acbtpl-icon','acbtpl-price','acbtpl-days','acbtpl-desc'].forEach(id=>{ const el = document.getElementById(id); if (el) el.value = ''; });
+  const dEl = document.getElementById('acbtpl-days'); if (dEl) dEl.value = '30';
+  const box = document.getElementById('acbtpl-list');
+  const list = state.botTemplates || [];
+  if (!list.length){ box.innerHTML = '<div class="alert alert-warn" style="margin:0"><span>📦</span><div><b>'+t('acbtpl_empty')+'</b></div></div>'; return; }
+  box.innerHTML = list.map(tf=>{
+    const isActive = tf.active !== false;
+    return '<div class="promo-row">'+
+      '<div><div style="font-weight:700">'+esc(tf.icon||'🤖')+' '+esc(tf.name)+' <span class="badge '+(isActive?'badge-in':'')+'" style="font-size:.7rem">'+(isActive?t('a_tariff_active'):t('a_tariff_inactive'))+'</span></div>'+
+      '<div class="pr-amt">'+fmtMoney(tf.price)+' '+t('som')+' / '+tf.days+' '+t('p_tariffs_days')+'</div>'+
+      '<div class="pr-meta">'+esc(tf.desc||'')+'</div>'+
+      '<div class="pr-meta" style="margin-top:6px;display:flex;gap:6px;align-items:center"><input class="form-control" type="number" style="width:130px" value="'+tf.price+'" id="acbtpl-price-'+esc(tf.id)+'" min="0"> <input class="form-control" type="number" style="width:90px" value="'+tf.days+'" id="acbtpl-days-'+esc(tf.id)+'" min="1"> <button class="mini-btn" onclick="adminSaveBotTemplate(\''+esc(tf.id)+'\')">'+t('acbtpl_update')+'</button></div>'+
+      '</div>'+
+      '<div class="row-actions">'+
+        '<button class="mini-btn" onclick="adminToggleBotTemplate(\''+esc(tf.id)+'\')">'+(isActive?t('a_tariff_toggle_off'):t('a_tariff_toggle_on'))+'</button>'+
+        '<button class="mini-btn danger" onclick="adminDeleteBotTemplate(\''+esc(tf.id)+'\')">✕</button>'+
+      '</div></div>';
+  }).join('');
+}
+function adminAddBotTemplate(){
+  const name = (document.getElementById('acbtpl-name').value||'').trim();
+  const icon = (document.getElementById('acbtpl-icon').value||'').trim() || '🤖';
+  const price = parseInt(document.getElementById('acbtpl-price').value, 10);
+  const days = parseInt(document.getElementById('acbtpl-days').value, 10) || 30;
+  const desc = (document.getElementById('acbtpl-desc').value||'').trim();
+  const msg = document.getElementById('acbtpl-msg');
+  if (!name || isNaN(price) || price < 0){ msg.innerHTML = '<div class="flash flash-err">⚠ '+t('cust_invalid_bal')+'</div>'; return; }
+  const list = (state.botTemplates||[]).slice();
+  list.push({ id: uid(), name, icon, desc, price, days, active: true, createdAt: Date.now() });
+  saveBotTemplates(list, msg);
+}
+function adminSaveBotTemplate(id){
+  const priceEl = document.getElementById('acbtpl-price-'+id); const daysEl = document.getElementById('acbtpl-days-'+id);
+  if (!priceEl) return;
+  const price = parseInt(priceEl.value, 10); const days = parseInt(daysEl.value, 10) || 30;
+  if (isNaN(price) || price < 0){ alert(t('cust_invalid_bal')); return; }
+  const list = (state.botTemplates||[]).map(tf => String(tf.id)===String(id) ? Object.assign({}, tf, { price, days }) : tf);
+  saveBotTemplates(list, document.getElementById('acbtpl-msg'));
+}
+function adminToggleBotTemplate(id){
+  const list = (state.botTemplates||[]).map(tf => String(tf.id)===String(id) ? Object.assign({}, tf, { active: tf.active === false ? true : false }) : tf);
+  saveBotTemplates(list, document.getElementById('acbtpl-msg'));
+}
+function adminDeleteBotTemplate(id){
+  if (!confirm(t('cb_confirm_delete'))) return;
+  const list = (state.botTemplates||[]).filter(tf => String(tf.id) !== String(id));
+  saveBotTemplates(list, document.getElementById('acbtpl-msg'));
+}
+function saveBotTemplates(list, msgEl){
+  api('/api/sync', { method:'PUT', body:{ shared: { botTemplates: list } } })
+    .then(res => { applyServer(res); renderABotTemplates(); renderDrawer(); if (msgEl) msgEl.innerHTML = '<div class="flash flash-ok">✓ '+t('acbtpl_saved')+'</div>'; })
+    .catch(e => { if (msgEl) msgEl.innerHTML = '<div class="flash flash-err">⚠ '+srvErr(e)+'</div>'; });
 }
 
 /* ============================================================
    PAGE ROUTING
    ============================================================ */
 let currentPage = 'dash';
-const CUST_PAGES = ['dash','profile','balance','mybots','tariffs','botdetail','promo','tx','activity','notif','settings','contact'];
-const ADMIN_PAGES = ['adash','ausers','abots','afiles','atopups','abalance','apromos','atariffs','abroadcast','achat','alogs','asettings'];
-const CUST_RENDER = { dash:renderDash, profile:renderProfile, balance:renderBalance, mybots:renderBots,
+const CUST_PAGES = ['dash','profile','balance','mybots','cbots','tariffs','botdetail','promo','tx','activity','notif','settings','contact'];
+const ADMIN_PAGES = ['adash','ausers','abots','afiles','atopups','abalance','apromos','atariffs','acbtpl','abroadcast','achat','alogs','asettings'];
+const CUST_RENDER = { dash:renderDash, profile:renderProfile, balance:renderBalance, mybots:renderBots, cbots:renderCBots,
   tariffs:renderTariffs, botdetail:renderBotDetail, promo:renderPromo, tx:renderTx, activity:renderActivity,
   notif:renderNotif, contact:renderContact };
 const ADMIN_RENDER = { adash:renderADash, ausers:renderAUsers, abots:renderABots, afiles:renderAFiles,
-  atopups:renderATopups, abalance:renderABalance, apromos:renderAPromos, atariffs:renderATariffs,
+  atopups:renderATopups, abalance:renderABalance, apromos:renderAPromos, atariffs:renderATariffs, acbtpl:renderABotTemplates,
   abroadcast:renderABroadcast, achat:renderAChat, alogs:renderALogs, asettings:renderASettings };
 
 function showPage(name){
@@ -2569,9 +2762,6 @@ function renderDash(){
   const u = user();
   document.getElementById('welcome-text').textContent = t('welcome') + ', ' + u.nick + '! 👋';
   document.getElementById('welcome-id').textContent = u.clientId;
-  document.getElementById('tg-banner-title').textContent = t('tg_banner_title');
-  document.getElementById('tg-banner-sub').textContent = t('tg_banner_sub');
-  document.getElementById('tg-banner-btn').textContent = t('tg_banner_btn');
   const active = u.bots.filter(b => b.status==='on' || b.status==='starting').length;
   const pendingT = (u.topupRequests||[]).filter(r=>r.status==='pending').length;
   const spent = u.transactions.filter(x => x.type==='out').reduce((s,x)=>s+x.amount,0);
@@ -2587,6 +2777,7 @@ function renderDash(){
     '<div class="stat-card"><div class="label"><span class="si">'+s.si+'</span> '+t(s.k)+'</div><div class="value '+s.cls+'">'+s.v+'</div></div>'
   ).join('');
   const qa = [
+    { ic:'⚡', k:'menu_cbots', p:'cbots' },
     { ic:'🤖', k:'p_mybots_deploy', p:'mybots' },
     { ic:'💰', k:'menu_balance', p:'balance' },
     { ic:'🎟', k:'menu_promo', p:'promo' },
